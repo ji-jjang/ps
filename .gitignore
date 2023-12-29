@@ -39,3 +39,6 @@ out/
 # CMake
 cmake-build-*/
 CMakeLists.txt
+
+# a.out
+a.out*
