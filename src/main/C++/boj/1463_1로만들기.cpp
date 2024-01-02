@@ -2,22 +2,25 @@
 using namespace std;
 
 int dp[1'000'001];
-
 int main(void) {
 	ios::sync_with_stdio(false);
-	cin.tie(NULL);
+	cin.tie(nullptr);
 
-	int N;
-	cin >> N;
+	int n;
+	cin >> n;
+	dp[0] = 0;
 	dp[1] = 0;
-	for (int i = 2; i <= N; ++i) {
+	for (int i = 2; i <= n; ++i) {
 		dp[i] = dp[i - 1] + 1;
-		if (i % 2 == 0) dp[i] = min(dp[i], dp[i / 2] + 1);
-		if (i % 3 == 0) dp[i] = min(dp[i], dp[i / 3] + 1);
+		if (i % 2 == 0)
+			dp[i] = min(dp[i], dp[i / 2] + 1);
+		if (i % 3 == 0)
+			dp[i] = min(dp[i], dp[i / 3] + 1);
 	}
-	cout << dp[N] << '\n';
+	cout << dp[n];
+
 }
-// 1. 테이블 정의하기
-// 	-> dp[i] = i를 1로 만들기 위해 필요한 연산 사용 횟수의 최솟값
-// 2. 점화식 찾기
-// 3. 초기값 정의하기	
+// dp[i] = 1로 만들기 위한 연산의 최소값
+// dp[1] = 0;
+// dp[2] = min(dp[2 - 1], if (i % 2 ==) dp[2 / 2]);
+// dp[3] = min(dp[3 - 1], if (i % 3 ==) dp[3 / 3]);
