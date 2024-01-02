@@ -1,20 +1,22 @@
 #include <iostream>
 using namespace std;
 
-int coins[11];
+int n, k;
+int coin[11];
 int main(void) {
 	ios::sync_with_stdio(false);
-	cin.tie(NULL);
-	int N, K;
+	cin.tie(nullptr);
 
-	cin >> N >> K;
-	for (int i = 0; i < N; ++i) {
-		cin >> coins[i];
+	cin >> n >> k;
+	for (int i = 0; i < n; ++i) {
+		cin >> coin[i];
 	}
-	long ans = 0;
-	for (int i = N - 1; i >= 0; --i) {
-		ans += (K / coins[i]);
-		K %= coins[i];
-	}	
-	cout << ans << '\n';
+	int ans = 0;
+	for (int i = n - 1; i >= 0; --i) {
+		if (coin[i] <= k) {
+			ans += k / coin[i];
+			k %= coin[i];
+		}
+	}
+	cout << ans;
 }

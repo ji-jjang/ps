@@ -2,24 +2,26 @@
 #include <algorithm>
 using namespace std;
 
-int A[101], B[101];
+int a[54], b[54];
 int main(void) {
 	ios::sync_with_stdio(false);
-	cin.tie(NULL);
+	cin.tie(nullptr);
 
-	int N;
-	cin >> N;
-	for (int i = 0; i < N; ++i) {
-		cin >> A[i];
+	int n;
+	cin >> n;
+	for (int i = 0; i < n; ++i) {
+		cin >> a[i];
 	}
-	for (int i = 0; i < N; ++i) {
-		cin >> B[i];
+	for (int i = 0; i < n; ++i) {
+		cin >> b[i];
 	}
-	sort(A, A + N);
-	sort(B, B + N);
-	long ans = 0;
-	for (int i = 0; i < N; ++i) {
-		ans += (A[i] * B[N - i - 1]);
+	sort(a, a + n);
+	sort(b, b + n, [](int a, int b) {
+			return a > b;
+	});
+	int ans = 0;
+	for (int i = 0; i < n; ++i) {
+		ans += a[i] * b[i];	
 	}
-	cout << ans << '\n';
+	cout << ans;
 }

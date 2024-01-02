@@ -1,19 +1,20 @@
 #include <iostream>
+#include <algorithm>
 using namespace std;
 
-int rope[100'001];
-
+int rope[100'003];
 int main(void) {
 	ios::sync_with_stdio(false);
-	cin.tie(NULL);
+	cin.tie(nullptr);
 
-	int N;
-	cin >> N;
-	for (int i = 0; i < N; ++i) 
+	int n;
+	cin >> n;
+	for (int i = 0; i < n; ++i)
 		cin >> rope[i];
-	sort(rope, rope + N);
+	sort(rope, rope + n);
 	int ans = 0;
-	for (int i = 1; i <= N; ++i)
-		ans = max(ans, rope[N - i] * i);
-	cout << ans << '\n';
+	for (int i = 0; i < n; ++i) {
+		ans = max(ans, rope[i] * (n - i));
+	}
+	cout << ans;
 }
