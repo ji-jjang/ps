@@ -2,38 +2,35 @@
 #include <algorithm>
 using namespace std;
 
-int N, M;
-int A[100'001];
+int n, m;
+int a[100'004];
 
-bool bsearch(int target) {
-	int st = 0;
-	int en = N - 1;
-
+int binarySearch(int st, int en, int target) {
 	while (st <= en) {
 		int mid = (st + en) / 2;
-		if (A[mid] < target) {
+		if (a[mid] < target) {			
 			st = mid + 1;
-		} else if (A[mid] > target) {
+		} else if (a[mid] > target) {
 			en = mid - 1;
 		} else
-			return true;
+			return 1;
 	}
-	return false;
+	return 0;
 }
 
 int main(void) {
 	ios::sync_with_stdio(false);
-	cin.tie(NULL);
+	cin.tie(nullptr);
 
-	cin >> N;
-	for (int i = 0; i < N; ++i) {
-		cin >> A[i];
+	cin >> n;
+	for (int i = 0; i < n; ++i) {
+		cin >> a[i];
 	}
-	sort(A, A + N);
-	cin >> M;
-	for (int i = 0; i < M; ++i) {
-		int num;
-		cin >> num;
-		cout << bsearch(num) << '\n';
+	sort(a, a + n);
+	cin >> m;
+	while (m--) {
+		int target;
+		cin >> target;
+		cout << binarySearch(0, n - 1, target) << '\n';
 	}
 }
