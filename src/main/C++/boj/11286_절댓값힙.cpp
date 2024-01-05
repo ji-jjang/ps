@@ -1,19 +1,18 @@
 #include <iostream>
 #include <queue>
-#include <cmath>
-
+#include <vector>
 using namespace std;
 
-bool compare(int a, int b) {
-    if (abs(a) != abs(b))
+auto comp = [](int a, int b) {
+	if (abs(a) != abs(b))
 		return abs(a) > abs(b);
 	return a > b;
-}
+};
 
-int main() {
+int main(void) {
 	ios::sync_with_stdio(false);
 	cin.tie(NULL);
-    priority_queue<int, vector<int>, decltype(&compare)> pq(compare);
+    priority_queue<int, vector<int>, decltype(comp)> pq(comp);
 
 	int n;
 	cin >> n;
@@ -33,3 +32,5 @@ int main() {
 		}
 	}
 }
+
+// 기본적으로 최대힙, 비교함수를 역으로 작성해야 한다.
