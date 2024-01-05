@@ -1,36 +1,36 @@
 #include <iostream>
 #include <set>
 #include <algorithm>
-
 using namespace std;
 
-pair<int, int> jewel[300'001];
+int n, k;
+pair<int, int> jewels[300'004];
 multiset<int> bag;
-
 int main(void) {
 	ios::sync_with_stdio(false);
-	cin.tie(NULL);
-	int N, K;
-	cin >> N >> K;
-	for (int i = 0; i < N; ++i) 
-		cin >> jewel[i].first >> jewel[i].second;
-	sort(jewel, jewel + N, [](const auto& a, const auto& b) {
-			return a.second < b.second;
+	cin.tie(nullptr);
+
+	cin >> n >> k;
+	for (int i = 0; i < n; ++i) {
+		cin >> jewels[i].first >> jewels[i].second;
+	}
+	sort(jewels, jewels + n, [](const auto& a, const auto& b) {
+		return a.second < b.second;
 	});
-	for (int i = 0; i < K; ++i) {
-		int c;
-		cin >> c;
-		bag.insert(c);
+	for (int i = 0; i < k; ++i) {
+		int num;
+		cin >> num;
+		bag.insert(num);
 	}
 	long long ans = 0;
-	for (int i = N - 1; i >= 0; --i) {
+	for (int i = n - 1; i >= 0; --i) {
 		int m, v;
-		tie(m, v) = jewel[i];
-		auto it = bag.lower_bound(m);
-		if (it == bag.end())
-			continue ;
+		tie(m, v) = jewels[i];
+		auto find = bag.lower_bound(m);
+		if (find == bag.end())
+			continue;
 		ans += v;
-		bag.erase(it);
+		bag.erase(find);
 	}
-	cout << ans << '\n';
+	cout << ans;
 }
