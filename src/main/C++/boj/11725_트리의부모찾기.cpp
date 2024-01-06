@@ -2,12 +2,13 @@
 #include <vector>
 using namespace std;
 
-vector<int> adj[100'001];
-int p[100'001];
+int n;
+vector<int> adj[100'004];
+int p[100'004];
 
 void dfs(int cur) {
-	for (int nxt : adj[cur]) {
-		if (p[cur] == nxt) continue;
+	for (auto nxt : adj[cur]) {
+		if (p[cur] == nxt) continue ;
 		p[nxt] = cur;
 		dfs(nxt);
 	}
@@ -15,17 +16,17 @@ void dfs(int cur) {
 
 int main(void) {
 	ios::sync_with_stdio(false);
-	cin.tie(NULL);
+	cin.tie(nullptr);
 
-	int N;
-	cin >> N;
-	for (int i = 0; i < N - 1; ++i) {
+	cin >> n;
+	for (int i = 0; i < n - 1; ++i) {
 		int u, v;
 		cin >> u >> v;
 		adj[u].push_back(v);
 		adj[v].push_back(u);
 	}
 	dfs(1);
-	for (int i = 2; i <= N; ++i)
+	for (int i = 2; i <= n; ++i) {
 		cout << p[i] << '\n';
+	}
 }
