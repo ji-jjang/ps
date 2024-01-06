@@ -1,54 +1,54 @@
 #include <iostream>
+#include <vector>
 #include <queue>
-#include <stack>
 #include <algorithm>
-#include <memory.h>
 using namespace std;
 
-int N, M, V;
-vector<int> adj[1001];
-bool isVisited[1001];
+int n, m, v;
+bool vis[1004];
+vector<int> adj[1004];
+
+void dfs(int cur) {
+	vis[cur] = true;
+	cout << cur << ' ';
+	for (auto nxt : adj[cur]) {
+		if (vis[nxt]) continue ;
+		dfs(nxt);
+	}
+}
+
+void bfs(int cur) {
+	queue<int> q;
+	vis[cur] = true;
+	q.push(cur);
+	while (!q.empty()) {
+		auto cur = q.front();
+		q.pop();
+		cout << cur << ' ';
+		for (auto nxt : adj[cur]) {
+			if (vis[nxt]) continue;
+			vis[nxt] = true;
+			q.push(nxt);
+		}
+	}
+}
+
 int main(void) {
 	ios::sync_with_stdio(false);
-	cin.tie(NULL);
+	cin.tie(nullptr);
 
-	cin >> N >> M >> V;
-	for (int i = 0; i < M; ++i) {
-		int a, b;
-		cin >> a >> b;
-		adj[a].push_back(b);
-		adj[b].push_back(a);
+	cin >> n >> m >> v;
+	for (int i = 0; i < m; ++i) {
+		int u, v;
+		cin >> u >> v;
+		adj[u].push_back(v);
+		adj[v].push_back(u);
 	}
-	for (int i = 1; i <= N; ++i) {
+	for (int i = 0; i < 1004; ++i) {
 		sort(adj[i].begin(), adj[i].end());
 	}
-	stack<int> s;
-	s.push(V);
-	while (!s.empty()) {
-		int cur = s.top();
-		s.pop();
-		if (isVisited[cur]) continue ;
-		isVisited[cur] = true;
-		cout << cur << ' ';
-		for (int i = 0; i < adj[cur].size(); ++i) {
-			int nxt = adj[cur][adj[cur].size() - 1 - i];
-			if (isVisited[nxt]) continue ;
-			s.push(nxt);
-		}
-	}
-	memset(isVisited, 0, sizeof(isVisited));
+	dfs(v);
 	cout << '\n';
-	queue<int> q;
-	q.push(V);
-	isVisited[V] = true;
-	while (!q.empty()) {
-		int cur = q.front();
-		cout << cur << ' ';
-		q.pop();
-		for (auto nxt : adj[cur]) {
-			if (isVisited[nxt]) continue ;
-			q.push(nxt);
-			isVisited[nxt] = true;
-		}
-	}
+	fill(vis, vis + 1004, 0);
+	bfs(v);
 }
