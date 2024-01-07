@@ -2,31 +2,35 @@
 #include <vector>
 #include <tuple>
 #include <algorithm>
-
 using namespace std;
 
-tuple<int, int, int> edge[100'001];
-vector<int> p(10001, -1);
 int v, e;
+tuple<int, int, int> edge[100'004];
+vector<int> p(10'004, -1);
 
 int find(int x) {
-	if (p[x] < 0) return x;
-	return p[x] = find(p[x]);
+	if (p[x] < 0)
+		return x;
+	else 
+		return p[x] = find(p[x]);
 }
 
-bool isDiffGroup(int u, int v) {
-	u = find(u); v = find(v);
-	if (u == v) return 0;
-	if (p[u] == p[v]) p[u]--;
-	if (p[u] < p[v]) p[v] = u;
-	else p[u] = v;
+bool unionByRank(int x, int y) {
+	x = find(x); y = find(y);
+	if (x == y) return 0;
+	if (p[x] == p[y])
+		--p[x];
+	if (p[x] < p[y])
+		p[y] = x;
+	else 
+		p[x] = y;
 	return 1;
 }
 
 int main(void) {
 	ios::sync_with_stdio(false);
-	cin.tie(NULL);
-	
+	cin.tie(nullptr);
+
 	cin >> v >> e;
 	for (int i = 0; i < e; ++i) {
 		int a, b, cost;
@@ -39,10 +43,11 @@ int main(void) {
 	for (int i = 0; i < e; ++i) {
 		int a, b, cost;
 		tie(cost, a, b) = edge[i];
-		if (!isDiffGroup(a, b)) continue;
+		if (!unionByRank(a, b))
+			continue ;
 		ans += cost;
 		++cnt;
 		if (cnt == v - 1) break;
 	}
-	cout << ans << '\n';
+	cout << ans;
 }
