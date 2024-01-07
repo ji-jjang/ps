@@ -1,33 +1,33 @@
 #include <iostream>
-#include <vector>
 #include <queue>
 using namespace std;
 
-int N, M;
-vector<int> adj[32001];
-int deg[32001];
+int n, m;
+vector<int> adj[32'004];
+int deg[32'004];
 int main(void) {
 	ios::sync_with_stdio(false);
-	cin.tie(NULL);
+	cin.tie(nullptr);
 
-	cin >> N >> M;
-	while (M--) {
-		int a, b;
-		cin >> a >> b;
-		adj[a].push_back(b);
-		deg[b]++;
+	cin >> n >> m;
+	for (int i = 0; i < m; ++i) {
+		int u, v;
+		cin >> u >> v;
+		adj[u].push_back(v);
+		deg[v]++;
+	}	
+	queue<int> q;
+	for (int i = 1; i <= n; ++i) {
+		if (deg[i] == 0)
+			q.push(i);
 	}
-	queue<int> Q;
-	for (int i = 1; i <= N; ++i) {
-		if (deg[i] == 0) Q.push(i);
-	}
-	while (!Q.empty()) {
-		int cur = Q.front(); Q.pop();
+	while (!q.empty()) { 
+		auto cur = q.front(); q.pop();
 		cout << cur << ' ';
-		for (int nxt : adj[cur]) {
-			deg[nxt]--;
+		for (auto nxt : adj[cur]) {
+			--deg[nxt];
 			if (deg[nxt] == 0)
-				Q.push(nxt);
+				q.push(nxt);
 		}
 	}
 }
