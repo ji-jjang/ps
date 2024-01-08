@@ -1,36 +1,32 @@
 #include <iostream>
+#include <algorithm>
 using namespace std;
 
+int city[104][104];
 const int INF = 0x3fffffff;
-int dist[102][102];
-int n, m;
 int main(void) {
-	ios::sync_with_stdio(false);
-	cin.tie(NULL);
-
-	cin >> n >> m;
-	for (int i = 1; i <= n; ++i) {
-		fill(dist[i], dist[i] + n + 1, INF);
-	}
-	while (m--) {
-		int a, b, c;
-		cin >> a >> b >> c;
-		dist[a][b] = min(dist[a][b], c);
-	}
 	for (int i = 1; i <= n; ++i)
-		dist[i][i] = 0;
+		fill(city[i], city[i] + n + 1, INF);
+	for (int i = 1; i <= m; ++i) {
+		int u, v, cost;
+		cin >> u >> v >> cost;
+		city[u][v] = min(city[u][v], cost);
+	}
 	for (int k = 1; k <= n; ++k) {
 		for (int i = 1; i <= n; ++i) {
 			for (int j = 1; j <= n; ++j) {
-				dist[i][j] = min(dist[i][j], dist[i][k] + dist[k][j]);
+				if (i == j) continue; 
+				city[i][j] = min(city[i][j], city[i][k] + city[k][j]);
 			}
 		}
 	}
 	for (int i = 1; i <= n; ++i) {
 		for (int j = 1; j <= n; ++j) {
-			if (dist[i][j] == INF) cout << "0 ";
-			else cout << dist[i][j] << ' ';
+			if (city[i][j] == INF)
+				city[i][j] = 0;
+			cout << city[i][j] << ' ';
 		}
 		cout << '\n';
 	}
 }
+
