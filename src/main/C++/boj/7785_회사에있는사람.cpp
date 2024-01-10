@@ -21,7 +21,7 @@ int main(void) {
 			s.erase(name);
 	}
 	vector<string> v(s.begin(), s.end());
-	sort(v.begin(), v.end(), [](const string &a, const string &b) {
+	sort(v.begin(), v.end(), [](auto &a, auto &b) {
 			return a > b;
 	});
 	for (auto c : v)
