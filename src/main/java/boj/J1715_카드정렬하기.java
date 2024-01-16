@@ -8,8 +8,8 @@ import java.util.PriorityQueue;
 public class J1715_카드정렬하기 {
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        int N = Integer.parseInt(br.readLine());
         PriorityQueue<Integer> pq = new PriorityQueue<>();
+        int N = Integer.parseInt(br.readLine());
         for (int i = 0; i < N; i++) {
             int num = Integer.parseInt(br.readLine());
             pq.add(num);

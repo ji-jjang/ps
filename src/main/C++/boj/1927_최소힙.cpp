@@ -6,26 +6,20 @@ int n;
 int main(void) {
 	ios::sync_with_stdio(false);
 	cin.tie(nullptr);
-	auto comp = [](auto& a, auto& b) {
-		int absA = abs(a);
-		int absB = abs(b);
-		if (absA != absB)
-			return absA > absB;
-		return a > b;
-	};
+	auto comp = [](auto& a, auto& b) { return a > b; };
 	priority_queue<int, vector<int>, decltype(comp)> pq(comp);
 	cin >> n;
 	while (n--) {
 		int num;
 		cin >> num;
 		if (!num) {
-			if (pq.empty()) {
+			if (pq.empty())
 				cout << 0 << '\n';
-			} else {
+			else {
 				cout << pq.top() << '\n';
-				pq.pop();		
+				pq.pop();
 			}
-		} else 
+		} else
 			pq.push(num);
 	}
 }

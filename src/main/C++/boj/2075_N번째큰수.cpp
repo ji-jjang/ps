@@ -9,19 +9,12 @@ int main(void) {
 	auto comp = [](auto& a, auto& b) { return a > b; };
 	priority_queue<int, vector<int>, decltype(comp)> pq(comp);
 	cin >> n;
-	while (n--) {
+	for (int i = 0; i < n * n; ++i) {
 		int num;
 		cin >> num;
 		pq.push(num);
-	}	
-	int cnt = 0;
-	while (pq.size() > 1) {
-		int a = pq.top();
-		pq.pop();
-		int b = pq.top();
-		pq.pop();
-		cnt += (a + b);
-		pq.push(a + b);
+		if ((int)pq.size() > n)
+			pq.pop();
 	}
-	cout << cnt;
+	cout << pq.top() << '\n';
 }
