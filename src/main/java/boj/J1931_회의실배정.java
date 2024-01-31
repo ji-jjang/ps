@@ -1,30 +1,37 @@
-package main.java.boj;
+package boj;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.Arrays;
-import java.util.Comparator;
+import java.util.ArrayList;
+import java.util.StringTokenizer;
 
 public class J1931_회의실배정 {
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        int N = Integer.parseInt(br.readLine());
-        int[][] meetings = new int[N][2];
-        for (int i = 0; i < N; i++) {
-            String[] numbers = br.readLine().split(" ");
-            meetings[i][0] = Integer.parseInt(numbers[0]);
-            meetings[i][1] = Integer.parseInt(numbers[1]);
+        ArrayList<int[]> meets = new ArrayList<>();
+        int n = Integer.parseInt(br.readLine());
+        for (int i = 0; i < n; i++) {
+            StringTokenizer st = new StringTokenizer(br.readLine());
+            int[] nums = new int[2];
+            nums[0]= Integer.parseInt(st.nextToken());
+            nums[1]= Integer.parseInt(st.nextToken());
+            meets.add(nums);
         }
-        Arrays.sort(meetings, Comparator.comparingInt((int[] a) -> a[1]).thenComparingInt(a -> a[0]));
-        int end = -1;
-        long ans = 0;
-        for (int i = 0; i < N; i++) {
-            if (end <= meetings[i][0]) {
-                end = meetings[i][1];
+        meets.sort((a, b) -> {
+            if (a[1] == b[1])
+                return Integer.compare(a[0], b[0]);
+            return Integer.compare(a[1], b[1]);
+        });
+        int now = 0;
+        int ans = 0;
+        for (var e : meets) {
+            if (now <= e[0]) {
+                now = e[1];
                 ++ans;
             }
         }
         System.out.println(ans);
+        br.close();
     }
 }

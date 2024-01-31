@@ -1,18 +1,18 @@
 #include <iostream>
+#include <algorithm>
 using namespace std;
 
-int c[14];
+int t[1004];
 int main(void) {
 	ios::sync_with_stdio(false);
 	cin.tie(nullptr);
-	int n, k;
-	cin >> n >> k;
+	int n;
+	cin >> n;
 	for (int i = 0; i < n; ++i)
-		cin >> c[i];
+		cin >> t[i];
+	sort(t, t + n);
 	int ans = 0;
-	for (int i = n - 1; i >= 0; --i) {
-		ans += k / c[i];
-		k %= c[i];
-	}
+	for (int i = 0; i < n; ++i)
+		ans += t[i] * (n - i);
 	cout << ans;
 }
