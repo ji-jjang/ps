@@ -7,14 +7,15 @@ int main(void) {
 	cin.tie(nullptr);
 	int n, m;
 	cin >> n >> m;
-	for (int i = 1; i <= n; ++i) {
+	cin >> sum[1];
+	for (int i = 2; i <= n; ++i) {
 		int num;
 		cin >> num;
 		sum[i] = sum[i - 1] + num;
-	}	
+	}
 	while (m--) {
-		int i, j;
-		cin >> i >> j;
-		cout << sum[j] - sum[i - 1] << '\n';
+		int st, en;
+		cin >> st >> en; 
+		cout << sum[en] - sum[st - 1] << '\n';
 	}
 }
