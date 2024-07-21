@@ -13,5 +13,7 @@ public class Main {
 
 			for (int i = 0; i < 26; ++i) bw.write(alpha[i] + " ");
 			bw.flush();
+            br.close();
+            bw.close();
 	}
 }
