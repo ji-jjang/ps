@@ -27,7 +27,7 @@ class Solution {
             int curNode = cur[1];
 
             if (isSummit(curNode, summits)) continue;
-            if (d[curNode] < curWeight) continue;
+            if (d[curNode] != curWeight) continue;
 
             for (var nxt : adj[curNode]) {
                 int newWeight = Math.max(curWeight, nxt[0]);
