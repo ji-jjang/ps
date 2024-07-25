@@ -36,12 +36,11 @@ class Solution {
         
         ans = Math.max(ans, sheep);
         
-        List<Integer> newNxts = new ArrayList<>(nxts);
-        if (lc[cur] != -1) newNxts.add(lc[cur]);
-        if (rc[cur] != -1) newNxts.add(rc[cur]);
+        if (lc[cur] != -1) nxts.add(lc[cur]);
+        if (rc[cur] != -1) nxts.add(rc[cur]);
         
-        for (var nxt : newNxts) {
-            List<Integer> tmps = new ArrayList<>(newNxts);
+        for (var nxt : nxts) {
+            List<Integer> tmps = new ArrayList<>(nxts);
             tmps.remove((Integer)nxt);
             dfs(nxt, sheep, wolf, tmps, lc, rc, info);
         }  
