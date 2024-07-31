@@ -10,33 +10,34 @@ class Solution {
             maxCop = Math.max(maxCop, p[1]);
         }
 
-        int[][] isVisited = new int[151][151];
-        for (var row : isVisited) Arrays.fill(row, Integer.MAX_VALUE);
+        int[][] dp = new int[maxAlp + 1][maxCop + 1];
+        for (var row : dp) Arrays.fill(row, Integer.MAX_VALUE);
 
-        dfs(alp, cop, 0, maxAlp, maxCop, problems, isVisited);
+        alp = Math.min(alp, maxAlp);
+        cop = Math.min(cop, maxCop);
 
-        return isVisited[maxAlp][maxCop];
-    }
+        dp[alp][cop] = 0;
 
-    void dfs(int alp, int cop, int cnt, int maxAlp, int maxCop, int[][] problems, int[][] isVisited) {
-        if (alp > maxAlp) alp = maxAlp;
-        
-        if (cop > maxCop) cop = maxCop;
+        for (int i = alp; i <= maxAlp; ++i) {
+            for (int j = cop; j <= maxCop; ++j) {
+                if (i < maxAlp) {
+                    dp[i + 1][j] = Math.min(dp[i + 1][j], dp[i][j] + 1);
+                }
+                if (j < maxCop) {
+                    dp[i][j + 1] = Math.min(dp[i][j + 1], dp[i][j] + 1);
+                }
 
-        if (isVisited[alp][cop] <= cnt) return;
-        
-        isVisited[alp][cop] = Math.min(isVisited[alp][cop], cnt);
-
-        if (alp == maxAlp && cop == maxCop) return;
-        
-        dfs(alp + 1, cop, cnt + 1, maxAlp, maxCop, problems, isVisited);
-        
-        dfs(alp, cop + 1, cnt + 1, maxAlp, maxCop, problems, isVisited);
-        
-        for (int[] problem : problems) {
-            if (alp >= problem[0] && cop >= problem[1]) {
-                dfs(alp + problem[2], cop + problem[3], cnt + problem[4], maxAlp, maxCop, problems, isVisited);
+                for (var p : problems) {
+                    if (i >= p[0] && j >= p[1]) {
+                        int newAlp = Math.min(i + p[2], maxAlp);
+                        int newCop = Math.min(j + p[3], maxCop);
+                        dp[newAlp][newCop] = Math.min(dp[newAlp][newCop], dp[i][j] + p[4]);
+                    }
+                }
             }
         }
+
+        return dp[maxAlp][maxCop];
     }
 }
+
