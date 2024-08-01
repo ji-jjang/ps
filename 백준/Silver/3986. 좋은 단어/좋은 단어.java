@@ -18,8 +18,8 @@ public class Main {
 
 	static boolean isGoodWords(String word) {
 		Map<Character, Character> m = new HashMap<>();
-		boolean[] isFirst = new boolean[2];
 		Stack<Character> s = new Stack<>();
+        
 		m.put('A', 'A');
 		m.put('B', 'B');
 		for (var c : word.toCharArray()) {
