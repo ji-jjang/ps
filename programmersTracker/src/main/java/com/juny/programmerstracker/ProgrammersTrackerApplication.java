@@ -210,7 +210,7 @@ public class ProgrammersTrackerApplication {
                 + baekjoonId
                 + "/)\n# 프로그래머스\n");
 
-    String svgImageLink = "![프로그래머스 정보](./programmersTracker/image" + filePath;
+    String svgImageLink = "![프로그래머스 정보](./programmersTracker/image" + filePath + ")";
 
     readmeContent += svgImageLink;
 
