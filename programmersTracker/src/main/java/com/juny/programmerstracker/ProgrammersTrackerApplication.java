@@ -1,6 +1,9 @@
 package com.juny.programmerstracker;
 
+import static org.apache.tomcat.util.http.fileupload.FileUtils.deleteDirectory;
+
 import java.io.IOException;
+import java.io.File;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
@@ -9,6 +12,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.time.Duration;
 import java.util.concurrent.TimeUnit;
+import java.util.UUID;
 import org.json.JSONObject;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Cookie;
@@ -47,7 +51,16 @@ public class ProgrammersTrackerApplication {
 
     WebDriver driver = new ChromeDriver(options);
 
+
     try {
+      File imagesDir = new File("./image");
+      if (imagesDir.exists()) {
+        deleteDirectory(imagesDir);
+      }
+      imagesDir.mkdirs();
+
+      String uniqueFileName = "/programmers_info_" + UUID.randomUUID().toString() + ".svg";
+
       driver.get("https://programmers.co.kr/account/sign_in");
       driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
 
@@ -64,7 +77,6 @@ public class ProgrammersTrackerApplication {
               ExpectedConditions.elementToBeClickable(
                   By.xpath(
                       "//button[@class='ayxkplSwAOlzWhl7UloQ IQmH8pxs6MpeDFpLSMPh Gosd7zfsHAxk1MOYSkL1' and text()='로그인하기']")));
-      loginButton.click();
 
       loginButton.click();
 
@@ -72,8 +84,8 @@ public class ProgrammersTrackerApplication {
 
       String token = getToken(driver);
       JSONObject data = getProgrammersData(token);
-      createSVGImage(data);
-      updateReadme();
+      createSVGImage(data, imagesDir + uniqueFileName);
+      updateReadme(uniqueFileName);
 
     } catch (Exception e) {
       e.printStackTrace();
@@ -111,7 +123,7 @@ public class ProgrammersTrackerApplication {
     }
   }
 
-  private static void createSVGImage(JSONObject data) throws IOException {
+  private static void createSVGImage(JSONObject data, String filePath) throws IOException {
     String svgContent =
         String.format(
             """
@@ -186,10 +198,10 @@ public class ProgrammersTrackerApplication {
             data.getInt("solvedChallengesCount"),
             data.getInt("rank"));
 
-    Files.writeString(Paths.get("programmers_info.svg"), svgContent);
+    Files.writeString(Paths.get(filePath), svgContent);
   }
 
-  private static void updateReadme() throws IOException {
+  private static void updateReadme(String filePath) throws IOException {
     String readmeContent =
         new String(
             "# 백준\n[![Solved.ac Profile](http://mazassumnida.wtf/api/v2/generate_badge?boj="
@@ -198,7 +210,7 @@ public class ProgrammersTrackerApplication {
                 + baekjoonId
                 + "/)\n# 프로그래머스\n");
 
-    String svgImageLink = "![프로그래머스 정보](./programmersTracker/programmers_info.svg)";
+    String svgImageLink = "![프로그래머스 정보](./programmersTracker/image" + filePath;
 
     readmeContent += svgImageLink;
 
