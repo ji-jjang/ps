@@ -2,10 +2,7 @@ name: Programmers & Baekjoon profile checker
 
 on:
   schedule:
-    - cron: '*/10 * * * *'
-  push:
-    branches:
-      - main
+    - cron: '0 8 * * *' # Asia/Seoul(UTC+9)
 
 permissions:
   contents: write
