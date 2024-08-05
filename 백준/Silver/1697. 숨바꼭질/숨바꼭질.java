@@ -11,7 +11,7 @@ public class Main {
 		int n = Integer.parseInt(st.nextToken());
 		int k = Integer.parseInt(st.nextToken());
 
-		boolean isVisited[] = new boolean[200_001];
+		boolean isVisited[] = new boolean[100_001];
 
 		Queue<int[]> q = new LinkedList<>();
 		q.offer(new int[]{n, 0});
@@ -28,11 +28,11 @@ public class Main {
 				isVisited[y - 1] = true;
 				q.offer(new int[]{y - 1, time + 1});
 			}
-			if (y + 1 <= 150_000 && !isVisited[y + 1]) {
+			if (y + 1 <= 100_000 && !isVisited[y + 1]) {
 				isVisited[y + 1] = true;
 				q.offer(new int[]{y + 1, time + 1});
 			}
-			if (y * 2 <= 150_000 && !isVisited[y * 2]) {
+			if (y * 2 <= 100_000 && !isVisited[y * 2]) {
 				isVisited[y * 2] = true;
 				q.offer(new int[]{y * 2, time + 1});
 			}
