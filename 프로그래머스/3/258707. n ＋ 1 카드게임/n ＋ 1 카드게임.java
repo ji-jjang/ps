@@ -16,13 +16,8 @@ class Solution {
             if (cursor < n) cardStack.add(cards[cursor++]);
 
             boolean isSearched = search(hand, target);
-            if (isSearched) {
-                ++ans;
-                continue;
-            }
-            
-            isSearched = false;
-            if (coin > 0) {
+  
+            if (!isSearched && coin > 0) {
                 for (int i = 0; i < hand.size(); i++) {
                     int find = target - hand.get(i);
                     if (cardStack.contains(find)) {
@@ -33,21 +28,16 @@ class Solution {
                     }
                 }
             }  
-            if (isSearched) {
-                ++ans;
-                continue;
-            }
-
-            if (coin >= 2) {
+  
+            if (!isSearched && coin >= 2) {
                 isSearched = search(cardStack, target);
                 if (isSearched) {
                     coin -= 2;
-                    ++ans;
-                    continue;
                 }
             }
-
-            break;
+            
+            if (isSearched) ++ans;
+            else break;
         }
 
         return Math.min(ans, n / 3 + 1);
