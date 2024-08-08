@@ -12,6 +12,7 @@ class Solution {
         int cursor = n / 3; 
         int ans = 1;
         while (true) {
+            if (ans == n / 3 + 1) break;
             if (cursor < n) cardStack.add(cards[cursor++]);
             if (cursor < n) cardStack.add(cards[cursor++]);
 
@@ -40,7 +41,7 @@ class Solution {
             else break;
         }
 
-        return Math.min(ans, n / 3 + 1);
+        return ans;
     }
 
     boolean search(List<Integer> list, int target) {
