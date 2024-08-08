@@ -5,13 +5,11 @@ class Solution {
         int n = plans.length;
         
         String[] ans = new String[n];
-        HashMap<Integer, String> m = new HashMap<>(); // index, subject 
         List<int[]> ps = new ArrayList<>(); // startTime, index, remaining
         Stack<int[]> s = new Stack<>(); // index, remaining
         for (int i = 0; i < n; ++i) {
             int st = convertMinutes(plans[i][1]);
             int remaining = Integer.parseInt(plans[i][2]);
-            m.put(i, plans[i][0]);
             ps.add(new int[]{st, i, remaining});
         }
         ps.sort((a, b) -> Integer.compare(a[0], b[0]));
@@ -19,11 +17,10 @@ class Solution {
         int idx = 0;
         for (int i = 0; i < n; ++i) {
             if (i != n - 1) {
-                if (s.isEmpty()) surplus = 0;
                 int timeGap = ps.get(i + 1)[0] - ps.get(i)[0];
                 int newRemaining = ps.get(i)[2] - timeGap;
                 if (newRemaining <= 0) {
-                    ans[idx++] = m.get(ps.get(i)[1]);
+                    ans[idx++] = plans[ps.get(i)[1]][0];
                     surplus += -newRemaining;
                     newRemaining = 0;
                 }
@@ -33,7 +30,7 @@ class Solution {
                 while (!s.isEmpty() && surplus > 0) {
                     if (s.peek()[1] <= surplus) {
                         surplus -= s.peek()[1];
-                        ans[idx++] = m.get(s.peek()[0]);
+                        ans[idx++] = plans[s.peek()[0]][0];
                         s.pop();
                     }
                     else {
@@ -42,16 +39,16 @@ class Solution {
                         surplus = 0;
                     }
                 }
+                if (s.isEmpty()) surplus = 0;
             }
             else {
-                ans[idx++] = m.get(ps.get(i)[1]);
+                ans[idx++] = plans[ps.get(i)[1]][0];
             }
         }
         while (!s.isEmpty()) {
             var cur = s.pop();
-            ans[idx++] = m.get(cur[0]);
+            ans[idx++] = plans[cur[0]][0];
         }
-        
         
         return ans;
     }
