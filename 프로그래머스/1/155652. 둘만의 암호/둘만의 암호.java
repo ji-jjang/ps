@@ -9,7 +9,7 @@ class Solution {
             alpha[idx++] = c;
         }
 
-        String ans = "";
+        StringBuilder sb = new StringBuilder();
         for (int i = 0; i < s.length(); i++) {
             char c = str[i];
             for (int j = 0; j < index; j++) {
@@ -24,9 +24,9 @@ class Solution {
                 if (isContain)
                     --j;
             }
-            ans += c;
+            sb.append(c);
         }
 
-        return ans;
+        return sb.toString();
     }
 }
