@@ -5,7 +5,6 @@ class Solution {
         Stack<Integer> s = new Stack<>();
         int n = board.length;
         
-        System.out.println();
         int ans = 0;
         for (var col : moves) {
             --col;
