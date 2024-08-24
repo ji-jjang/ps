@@ -1,4 +1,4 @@
 # 백준
 [![Solved.ac Profile](http://mazassumnida.wtf/api/v2/generate_badge?boj=jiny_us)](https://solved.ac/jiny_us/)
 # 프로그래머스
-![프로그래머스 정보](./programmersTracker/image/programmers_info_1e4b99b6-6c93-450c-9f82-5a64f38b2be6.svg)
+![프로그래머스 정보](./programmersTracker/image/programmers_info_37c55556-d79c-4bbd-ba79-b0966ae6909a.svg)
