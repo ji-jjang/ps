@@ -42,7 +42,7 @@
     <tspan>현재 점수</tspan>
   </text>
   <text text-anchor="middle" x="400" y="85" class="desc" stroke="none" stroke-width="1">
-    <tspan>1712</tspan>
+    <tspan>1715</tspan>
   </text>
 
   <rect x="10" y="120" width="250" height="100" fill="#ecf5ff"/>
@@ -50,7 +50,7 @@
     <tspan>해결한 코딩 테스트</tspan>
   </text>
   <text text-anchor="middle" x="135" y="190" class="desc" stroke="none" stroke-width="1">
-    <tspan>167</tspan>
+    <tspan>170</tspan>
     <tspan class="desc-2">문제</tspan>
   </text>
 
@@ -59,7 +59,7 @@
     <tspan>나의 랭킹</tspan>
   </text>
   <text text-anchor="middle" x="400" y="190" class="desc" stroke="none" stroke-width="1">
-    <tspan>1544</tspan>
+    <tspan>1491</tspan>
     <tspan class="desc-2">위</tspan>
   </text>
 </svg>
