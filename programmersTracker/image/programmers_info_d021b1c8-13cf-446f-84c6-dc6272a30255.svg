@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="600px" height="230px"
+  style="shape-rendering:geometricPrecision; text-rendering:geometricPrecision; image-rendering:optimizeQuality; fill-rule:evenodd; clip-rule:evenodd"
+  xmlns:xlink="http://www.w3.org/1999/xlink">
+  <style>
+    .title {
+    color: #0078ff;
+    font-size: 1rem;
+    line-height: 2.5rem;
+    font-weight: bold;
+    font-family: -apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif
+    }
+    .desc {
+    color: #0078ff;
+    font-size: 2.5rem;
+    font-weight: bold;
+    line-height: 1.5rem;
+    font-family: -apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif
+    }
+    .desc-2 {
+    color: #0078ff;
+    font-size: 1rem;
+    font-weight: bold;
+    line-height: 1.5rem;
+    font-family: -apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif
+    }
+  </style>
+
+  <rect x="0" y="0" width="530" height="250" fill="#fefefe"/>
+
+  <rect x="10" y="10" width="250" height="100" fill="#ecf5ff"/>
+  <text text-anchor="middle" x="135" y="45" class="title" style="fill:#0078ff;" stroke="none" stroke-width="1">
+    <tspan>이름</tspan>
+  </text>
+  <text text-anchor="middle" x="135" y="85" class="desc" stroke="none" stroke-width="1">
+    <tspan>jinyhehe</tspan>
+  </text>
+
+  <rect x="270" y="10" width="250" height="100" fill="#ecf5ff"/>
+  <text text-anchor="middle" x="395" y="45" class="title" style="fill:#0078ff;" stroke="none" stroke-width="1">
+    <tspan>현재 점수</tspan>
+  </text>
+  <text text-anchor="middle" x="400" y="85" class="desc" stroke="none" stroke-width="1">
+    <tspan>1728</tspan>
+  </text>
+
+  <rect x="10" y="120" width="250" height="100" fill="#ecf5ff"/>
+  <text text-anchor="middle" x="135" y="150" class="title" style="fill:#0078ff;" stroke="none" stroke-width="1">
+    <tspan>해결한 코딩 테스트</tspan>
+  </text>
+  <text text-anchor="middle" x="135" y="190" class="desc" stroke="none" stroke-width="1">
+    <tspan>183</tspan>
+    <tspan class="desc-2">문제</tspan>
+  </text>
+
+  <rect x="270" y="120" width="250" height="100" fill="#ecf5ff"/>
+  <text text-anchor="middle" x="395" y="150" class="title" style="fill:#0078ff;" stroke="none" stroke-width="1">
+    <tspan>나의 랭킹</tspan>
+  </text>
+  <text text-anchor="middle" x="400" y="190" class="desc" stroke="none" stroke-width="1">
+    <tspan>1264</tspan>
+    <tspan class="desc-2">위</tspan>
+  </text>
+</svg>
