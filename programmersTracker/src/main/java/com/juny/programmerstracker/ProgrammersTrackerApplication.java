@@ -111,7 +111,7 @@ public class ProgrammersTrackerApplication {
     HttpRequest request =
         HttpRequest.newBuilder()
             .uri(URI.create(apiUrl))
-            .header("Cookie", "_programmers_session_production=" + token)
+            .header("Cookie", "_session_production=" + token)
             .build();
 
     HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
