@@ -95,7 +95,7 @@ public class ProgrammersTrackerApplication {
   }
 
   private static String getToken(WebDriver driver) {
-    Cookie sessionCookie = driver.manage().getCookieNamed("_programmers_session_production");
+    Cookie sessionCookie = driver.manage().getCookieNamed("_session_production");
     if (sessionCookie != null) {
       return sessionCookie.getValue();
     } else {
