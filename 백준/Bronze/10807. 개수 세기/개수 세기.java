@@ -2,19 +2,24 @@ import java.io.*;
 import java.util.*;
 
 public class Main {
+
 	public static void main(String[] args) throws IOException {
+
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
 		int n = Integer.parseInt(br.readLine());
-		StringTokenizer st = new StringTokenizer(br.readLine());
-		int target = Integer.parseInt(br.readLine());
 
-		Map<Integer, Integer> m = new HashMap<>();
+		int[] nums = new int[n];
+		StringTokenizer st = new StringTokenizer(br.readLine());
 		for (int i = 0; i < n; ++i) {
-			int num = Integer.parseInt(st.nextToken());
-			m.put(num, m.getOrDefault(num, 0) + 1);
+			nums[i] = Integer.parseInt(st.nextToken());
 		}
-		System.out.println(m.getOrDefault(target, 0));
-		br.close();
+		int x = Integer.parseInt(br.readLine());
+		int ans = 0;
+		for (int i = 0; i < n; ++i) {
+			if (nums[i] == x)
+				++ans;
+		}
+		System.out.println(ans);
 	}
 }
