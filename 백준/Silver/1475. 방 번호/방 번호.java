@@ -1,24 +1,33 @@
 import java.io.*;
+import java.util.*;
 
 public class Main {
-	public static void main(String[] args) throws IOException {
-		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
 
-		String nums = br.readLine();
-		int[] ret = new int[10];
-		for (char c : nums.toCharArray()) {
-			if (c == '6' || c == '9') ret[6]++;
-			else ret[c - '0']++;
+	public static void main(String[] args) throws IOException {
+
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+
+		int n = Integer.parseInt(br.readLine());
+		int[] cnt = new int[10];
+
+		while (n > 0) {
+			cnt[n % 10]++;
+			n /= 10;
 		}
-		ret[6] = ret[6] % 2 == 0 ? ret[6] / 2 : ret[6] / 2 + 1;
+		cnt[6] += cnt[9]; 
+
 		int ans = 0;
 		for (int i = 0; i < 9; ++i) {
-			ans = Math.max(ans, ret[i]);
+			if (i != 6 && ans < cnt[i]) {
+				ans = cnt[i];
+			}
 		}
-		bw.write(ans + '0');
-		bw.flush();
-		bw.close();
-		br.close();
+		if (ans <= cnt[6] / 2) {
+			ans = cnt[6] / 2;
+			if (cnt[6] % 2 == 1) ++ans;
+		}
+
+		System.out.println(ans);
 	}
+
 }
