@@ -1,22 +1,22 @@
-import java.util.*;
 import java.io.*;
+import java.util.*;
 
 public class Main {
+
 	public static void main(String[] args) throws IOException {
 
-			BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
-			String str1 = br.readLine();
-			String str2 = br.readLine();
+		int[] isVisited = new int[26];
+		for (var c : br.readLine().toCharArray())
+			isVisited[c - 'a']++;
+		for (var c : br.readLine().toCharArray())
+			isVisited[c - 'a']--;
 
-			HashMap<Character, Integer> m= new HashMap<>();
-			for (var c : str1.toCharArray()) m.put(c, m.getOrDefault(c, 0) + 1);
-			for (var c : str2.toCharArray()) m.put(c, m.getOrDefault(c, 0) - 1);
-			int ans = 0;
-			for (char c = 'a'; c <= 'z'; ++c) {
-				ans += Math.abs(m.getOrDefault(c, 0));
-			}
-			System.out.println(ans);
-			br.close();
+		int ans = 0;
+		for (int i = 0; i < 26; ++i)
+			ans += Math.abs(isVisited[i]);
+
+		System.out.println(ans);
 	}
 }
