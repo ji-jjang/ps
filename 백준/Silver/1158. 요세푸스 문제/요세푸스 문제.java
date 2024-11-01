@@ -2,39 +2,55 @@ import java.io.*;
 import java.util.*;
 
 public class Main {
+
 	public static void main(String[] args) throws IOException {
 
-		Scanner sc = new Scanner(System.in);
-		int n = sc.nextInt();
-		int k = sc.nextInt();
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
-		int[] pre = new int[5_004];
-		int[] nxt = new int[5_004];
+		StringTokenizer st = new StringTokenizer(br.readLine());
+		int n = Integer.parseInt(st.nextToken());
+		int k = Integer.parseInt(st.nextToken());
 
-		for (int i = 1; i <= n; ++i) {
-			pre[i] = i - 1;
-			nxt[i] = i + 1;
+		int[] pre = new int[n];
+		int[] nxt = new int[n];
+		int[] dat = new int[n];
+		for (int i = 0; i < n; ++i) {
+			dat[i] = i + 1;
 		}
-		pre[1] = n;
-		nxt[n] = 1;
 
-		int len = n;
-		int cur = 0;
-		int move = 1;
-		nxt[0] = 1;
+		pre[0] = n - 1;
+		for (int i = 0; i < n; ++i) {
+			nxt[i] = i + 1;
+			if (i + 1 >= n) continue;
+			pre[i + 1] = i;
+		}
+		nxt[n - 1] = 0;
+
 		StringBuilder sb = new StringBuilder();
+		int cur = 0;
+		int size = n;
 		sb.append('<');
-		while (len > 0) {
+		boolean isFirst = true;
+		while (size > 0) {
 
-			for (int i = 0; i < k; ++i) cur = nxt[cur];
-
-			pre[nxt[cur]] = pre[cur];
+			int step = 0;
+			if (isFirst) {
+				step = 1;
+				isFirst = false;
+			}
+			for (; step < k; ++step) {
+				cur = nxt[cur];
+			}
+			sb.append(dat[cur]);
 			nxt[pre[cur]] = nxt[cur];
-			sb.append(cur);
-			--len;
-			if (len > 0) sb.append(", ");
+			pre[nxt[cur]] = pre[cur];
+
+			if (size != 1)
+				sb.append(", ");
+			--size;
 		}
 		sb.append('>');
-		System.out.println(sb.toString());
+		System.out.println(sb);
 	}
 }
+
