@@ -1,49 +1,47 @@
 import java.io.*;
-import java.util.LinkedList;
-import java.util.Queue;
-import java.util.StringTokenizer;
+import java.util.*;
 
 public class Main {
-    public static void main(String[] args) throws IOException {
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
+	public static void main(String[] args) throws IOException {
 
-        int n = Integer.parseInt(br.readLine());
-        Queue<Integer> Q = new LinkedList<>();
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		StringBuilder sb = new StringBuilder();
+		int n = Integer.parseInt(br.readLine());
 
-        for (int i = 0; i < n; i++) {
-            StringTokenizer st = new StringTokenizer(br.readLine());
-            String op = st.nextToken();
-            if ("push".equals(op)) {
-                int num = Integer.parseInt(st.nextToken());
-                Q.add(num);
-            } else if ("pop".equals(op)) {
-                if (Q.isEmpty()) {
-                    bw.write(-1 + "\n");
-                } else {
-                    bw.write(Q.poll() + "\n");
-                }
-            } else if ("size".equals(op)) {
-                bw.write(Q.size() + "\n");
-            } else if ("empty".equals(op)) {
-                if (Q.isEmpty())
-                    bw.write(1 + "\n");
-                else
-                    bw.write(0 + "\n");
-            } else if ("front".equals(op)) {
-                if (Q.isEmpty())
-                    bw.write(-1 + "\n");
-                else
-                    bw.write(Q.peek() + "\n");
-            } else if ("back".equals(op)) {
-                if (Q.isEmpty())
-                    bw.write(-1 + "\n");
-                else
-                    bw.write(((LinkedList<Integer> )Q).getLast() + "\n");
-            }
-        }
-        bw.flush();
-        bw.close();
-        br.close();
-    }
+		Queue<Integer> q = new LinkedList<>();
+		while (n-- > 0) {
+			StringTokenizer st = new StringTokenizer(br.readLine());
+			String cmd = st.nextToken();
+			if ("push".equals(cmd)) {
+				q.add(Integer.parseInt(st.nextToken()));
+			} else if ("pop".equals(cmd)) {
+				if (q.isEmpty()) {
+					sb.append("-1\n");
+					continue;
+				} 
+				sb.append(q.poll() + "\n");
+			} else if ("size".equals(cmd)) {
+				sb.append(q.size() + "\n");
+			} else if ("empty".equals(cmd)) {
+				if (q.isEmpty()) {
+					sb.append("1\n");
+					continue;
+				}
+				sb.append("0\n");
+			} else if ("front".equals(cmd)) {
+				if (q.isEmpty()) {
+					sb.append("-1\n");
+					continue;
+				}
+				sb.append(q.peek() + "\n");
+			} else if ("back".equals(cmd)) {
+				if (q.isEmpty()) {
+					sb.append("-1\n");
+					continue;
+				}
+				sb.append(((LinkedList<Integer>)q).getLast() + "\n");
+			}
+		}
+		System.out.println(sb);
+	}
 }
