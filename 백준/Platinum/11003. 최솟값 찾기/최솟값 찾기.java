@@ -1,36 +1,33 @@
-import java.util.*;
 import java.io.*;
+import java.util.*;
 
 public class Main {
-
 	public static void main(String[] args) throws IOException {
 
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		StringBuilder ans = new StringBuilder();
 
 		StringTokenizer st = new StringTokenizer(br.readLine());
+
 		int n = Integer.parseInt(st.nextToken());
 		int l = Integer.parseInt(st.nextToken());
-
-		int[] a = new int[n];
 		st = new StringTokenizer(br.readLine());
-		for (int i = 0; i < n; i++) a[i] = Integer.parseInt(st.nextToken());
 
-		Deque<Integer> dq = new LinkedList<>();
-
+		Deque<int[]> dq = new LinkedList<>(); // index, number
+		StringBuilder sb = new StringBuilder();
 		for (int i = 0; i < n; ++i) {
-			if (!dq.isEmpty() && dq.peekFirst() <= i - l) {
+			int num = Integer.parseInt(st.nextToken());
+
+			if (!dq.isEmpty() && dq.peekFirst()[0] + l <= i) {
 				dq.pollFirst();
 			}
 
-			while (!dq.isEmpty() && a[dq.peekLast()] >= a[i]) {
+			while (!dq.isEmpty() && dq.peekLast()[1] > num) {
 				dq.pollLast();
 			}
 
-			dq.offerLast(i);
-
-			ans.append(a[dq.peekFirst()]).append(' ');
+			dq.offerLast(new int[]{i, num});
+			sb.append(dq.peekFirst()[1] + " ");
 		}
-		System.out.println(ans);
+		System.out.println(sb);
 	}
 }
