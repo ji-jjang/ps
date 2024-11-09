@@ -2,38 +2,28 @@ import java.io.*;
 import java.util.*;
 
 public class Main {
-
 	public static void main(String[] args) throws IOException {
 
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		
+
 		int n = Integer.parseInt(br.readLine());
 		int ans = 0;
 		while (n-- > 0) {
-			String word = br.readLine();
-			if (isGoodWords(word)) ++ans;
-		}
-		System.out.println(ans);
-	}
-
-	static boolean isGoodWords(String word) {
-		Map<Character, Character> m = new HashMap<>();
-		Stack<Character> s = new Stack<>();
-        
-		m.put('A', 'A');
-		m.put('B', 'B');
-		for (var c : word.toCharArray()) {
-			if (s.isEmpty()) {
-				s.push(c);
-			} else {
-				if (s.peek() != m.get(c)) {
-					s.push(c);
+			String line = br.readLine();
+			Deque<Character> dq = new ArrayDeque<>();
+			for (var c : line.toCharArray()) {
+				if (dq.isEmpty()) {
+					dq.push(c);
 				}
 				else {
-					s.pop();
+					if (dq.peekFirst() != c)
+						dq.offerFirst(c);
+					else
+						dq.pollFirst();
 				}
 			}
+			if (dq.isEmpty()) ++ans;
 		}
-		return s.isEmpty();
+		System.out.println(ans);
 	}
 }
