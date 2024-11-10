@@ -2,27 +2,24 @@ import java.io.*;
 import java.util.*;
 
 public class Main {
-
 	public static void main(String[] args) throws IOException {
 
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
-		Map<Character, Character> m = new HashMap<>();
-		Stack<Character> s = new Stack<>();
-		m.put(')', '(');
-
-		int ans = 0;
 		String line = br.readLine();
+		Deque<Character> dq = new ArrayDeque<>();
+		int ans = 0;
 		for (int i = 0; i < line.length(); ++i) {
-			if (line.charAt(i) == '(')
-				s.push(line.charAt(i));
+			if (line.charAt(i) == '(') {
+				dq.offerFirst(line.charAt(i));
+			}
 			else {
-				if (line.charAt(i - 1) != line.charAt(i)) {
-					ans += s.size() - 1;
-				} else {
+				dq.pollFirst();
+				if (line.charAt(i - 1) == ')') {
 					++ans;
 				}
-				s.pop();
+				else 
+					ans += dq.size();
 			}
 		}
 		System.out.println(ans);
