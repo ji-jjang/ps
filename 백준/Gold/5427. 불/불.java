@@ -1,42 +1,44 @@
-import java.util.*;
 import java.io.*;
+import java.util.*;
 
+// BFS, O(t * r * c)
 public class Main {
+	
+	static int[] dy = {-1, 0, 1, 0};
+	static int[] dx = {0, 1, 0, -1};
+	static Queue<int[]> jq, fq;
+	static int n;
 	public static void main(String[] args) throws IOException {
+
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		StringBuilder sb = new StringBuilder();
-
 		int t = Integer.parseInt(br.readLine());
-
 		while (t-- > 0) {
+			jq = new LinkedList<>();
+			fq = new LinkedList<>();
 			StringTokenizer st = new StringTokenizer(br.readLine());
-
 			int c = Integer.parseInt(st.nextToken());
 			int r = Integer.parseInt(st.nextToken());
 			char[][] board = new char[r][c];
-			int[][] sDist = new int[r][c];
-			int[][] fDist = new int[r][c];
+			int[][] jdist = new int[r][c];
+			int[][] fdist = new int[r][c];
 			for (int i = 0; i < r; ++i) {
-				Arrays.fill(sDist[i], -1);
-				Arrays.fill(fDist[i], -1);
+				Arrays.fill(jdist[i], -1);
+				Arrays.fill(fdist[i], -1);
 			}
-			Queue<int[]> sq = new LinkedList<>();
-			Queue<int[]> fq = new LinkedList<>();
-			int[] dy = {-1, 0, 1, 0};
-			int[] dx = {0, 1, 0, -1};
-
 			for (int i = 0; i < r; ++i) {
-				String line = br.readLine();
+				char[] line = br.readLine().toCharArray();
 				for (int j = 0; j < c; ++j) {
-					board[i][j] = line.charAt(j);
-					if (board[i][j] == '*') {
-						fDist[i][j] = 0;
+					board[i][j] = line[j];
+					if (board[i][j] == '@') {
+						board[i][j] = '.';
+						jdist[i][j] = 1;
+						jq.offer(new int[]{i, j});
+					}
+					else if (board[i][j] == '*') {
+						board[i][j] = '.';
+						fdist[i][j] = 1;
 						fq.offer(new int[]{i, j});
-						board[i][j] = '.';
-					} else if (board[i][j] == '@') {
-						sDist[i][j] = 0;
-						sq.offer(new int[]{i, j});
-						board[i][j] = '.';
 					}
 				}
 			}
@@ -49,35 +51,37 @@ public class Main {
 					int ny = y + dy[dir];
 					int nx = x + dx[dir];
 					if (ny < 0 || ny >= r || nx < 0 || nx >= c) continue;
-					if (board[ny][nx] != '.' || fDist[ny][nx] != -1) continue;
-					fDist[ny][nx] = fDist[y][x] + 1;
+					if (board[ny][nx] != '.' || fdist[ny][nx] != -1) continue;
+					fdist[ny][nx] = fdist[y][x] + 1;
 					fq.offer(new int[]{ny, nx});
 				}
 			}
-
-			boolean isPossible = false;
-			while (!sq.isEmpty()) {
-				var cur = sq.poll();
+			boolean isEscape = false;
+			int moveCount = 0;
+			while (!jq.isEmpty()) {
+				var cur = jq.poll();
 				int y = cur[0];
 				int x = cur[1];
-				if (y == 0 || y == r - 1 || x == 0 || x == c - 1) {
-					sb.append(sDist[y][x] + 1);
-					sb.append("\n");
-					isPossible = true;
+				if (y == 0 || y == r - 1 || x == 0 || x == c -1) {
+					isEscape = true;
+					moveCount = jdist[y][x];
 					break;
 				}
 				for (int dir = 0; dir < 4; ++dir) {
 					int ny = y + dy[dir];
 					int nx = x + dx[dir];
 					if (ny < 0 || ny >= r || nx < 0 || nx >= c) continue;
-					if (board[ny][nx] != '.' || sDist[ny][nx] != -1) continue;
-					if (fDist[ny][nx] != -1 && sDist[y][x] + 1 >= fDist[ny][nx]) continue;
-					sDist[ny][nx] = sDist[y][x] + 1;
-					sq.offer(new int[]{ny, nx});
+					if (board[ny][nx] != '.' || jdist[ny][nx] != -1) continue;
+					if (fdist[ny][nx] != -1 && fdist[ny][nx] <= jdist[y][x] + 1) continue;
+					jdist[ny][nx] = jdist[y][x] + 1;
+					jq.offer(new int[]{ny, nx});
 				}
 			}
-			if (!isPossible)
-				sb.append("IMPOSSIBLE\n");
+			if (isEscape) {
+				sb.append(moveCount + "\n");
+				continue;
+			}
+			sb.append("IMPOSSIBLE\n");
 		}
 		System.out.println(sb);
 	}
