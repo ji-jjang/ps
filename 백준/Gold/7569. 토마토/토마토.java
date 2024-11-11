@@ -1,8 +1,16 @@
-import java.util.*;
 import java.io.*;
+import java.util.*;
 
+// BFS, O(h * r * c)
 public class Main {
+	
+	static int[] dz = {0, 0, 0, 0, -1, 1};
+	static int[] dy = {-1, 1, 0, 0, 0, 0};
+	static int[] dx = {0, 0, -1, 1, 0, 0};
+	static Queue<int[]> q = new LinkedList<>();
+	static int n;
 	public static void main(String[] args) throws IOException {
+
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
 		StringTokenizer st = new StringTokenizer(br.readLine());
@@ -10,33 +18,26 @@ public class Main {
 		int c = Integer.parseInt(st.nextToken());
 		int r = Integer.parseInt(st.nextToken());
 		int h = Integer.parseInt(st.nextToken());
-
 		int[][][] board = new int[h][r][c];
 		int[][][] dist = new int[h][r][c];
-		for (int k = 0; k < h; ++k) {
-			for (int i = 0; i < r; ++i) {
-				for (int j = 0; j < c; ++j) {
-					dist[k][i][j] = -1;
-				}
+		for (int i = 0; i < h; ++i) {
+			for (int j = 0; j < r; ++j) {
+				Arrays.fill(dist[i][j], -1);
 			}
 		}
-		Queue<int[]> q = new LinkedList<>();
 
-		for (int k = 0; k < h; ++k) {
-			for (int i = 0; i < r; ++i) {
+		for (int i = 0; i < h; ++i) {
+			for (int j = 0; j < r; ++j) {
 				st = new StringTokenizer(br.readLine());
-				for (int j = 0; j < c; ++j) {
-					board[k][i][j] = Integer.parseInt(st.nextToken());
-					if (board[k][i][j] == 1) {
-						dist[k][i][j] = 0;
-						q.offer(new int[]{k, i, j});
+				for (int k = 0; k < c; ++k) {
+					board[i][j][k] = Integer.parseInt(st.nextToken());
+					if (board[i][j][k] == 1) {
+						dist[i][j][k] = 0;
+						q.offer(new int[]{i, j, k});
 					}
 				}
 			}
 		}
-		int[] dz = {-1, 1, 0, 0, 0, 0};
-		int[] dy = {0, 0, -1, 1, 0, 0}; 
-		int[] dx = {0, 0, 0, 0, -1, 1}; 
 		while (!q.isEmpty()) {
 			var cur = q.poll();
 			int z = cur[0];
@@ -52,17 +53,15 @@ public class Main {
 				q.offer(new int[]{nz, ny, nx});
 			}
 		}
-
-		boolean isImpossible = false;
 		int ans = 0;
-		for (int k = 0; k < h; ++k) {
-			for (int i = 0; i < r; ++i) {
-				for (int j = 0; j < c; ++j) {
-					if (board[k][i][j] == 0 && dist[k][i][j] == -1) {
+		for (int i = 0; i < h; ++i) {
+			for (int j = 0; j < r; ++j) {
+				for (int k = 0; k < c; ++k) {
+					if (board[i][j][k] == 0 && dist[i][j][k] == -1) {
 						System.out.println(-1);
 						return;
 					}
-					ans = Math.max(ans, dist[k][i][j]);
+					ans = Math.max(ans, dist[i][j][k]);
 				}
 			}
 		}
