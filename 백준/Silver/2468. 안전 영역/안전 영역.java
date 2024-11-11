@@ -1,17 +1,19 @@
 import java.io.*;
 import java.util.*;
 
+// BFS, O(h * n * n)
 public class Main {
 
+	static int[] dy = {-1, 0, 1, 0};
+	static int[] dx = {0, 1, 0, -1};
+	static Queue<int[]> q;
 	public static void main(String[] args) throws IOException {
+
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
 		int n = Integer.parseInt(br.readLine());
 		int[][] board = new int[n][n];
-		int[][] tmp = new int[n][n];
-		boolean[][] isVisited = new boolean[n][n];
-		Queue<int[]> q = new LinkedList<>();
-		
+
 		for (int i = 0; i < n; ++i) {
 			StringTokenizer st = new StringTokenizer(br.readLine());
 			for (int j = 0; j < n; ++j) {
@@ -19,27 +21,23 @@ public class Main {
 			}
 		}
 
-		int dy[] = {-1, 0, 1, 0};
-		int dx[] = {0, 1, 0, -1};
-		int ans = 0;
-
-		for (int h = 0; h <= 100; ++h) {
-			
+		int ans = 1;
+		int[][] tmp = new int[n][n];
+		for (int h = 1; h <= 100; ++h) {
+			q = new LinkedList<>();
 			for (int i = 0; i < n; ++i) {
 				for (int j = 0; j < n; ++j) {
 					tmp[i][j] = board[i][j] - h;
-					if (tmp[i][j] < 0) tmp[i][j] = 0;
-					isVisited[i][j] = false;
+					if (tmp[i][j] < 0)
+						tmp[i][j] = 0;
 				}
 			}
-			q.clear();
-
-			int safeArea = 0;
+			int cnt = 0;
 			for (int i = 0; i < n; ++i) {
 				for (int j = 0; j < n; ++j) {
-					if (tmp[i][j] != 0 && !isVisited[i][j]) {
-						++safeArea;
-						isVisited[i][j] = true;
+					if (tmp[i][j] != 0) {
+						++cnt;
+						tmp[i][j] = 0;
 						q.offer(new int[]{i, j});
 					}
 					while (!q.isEmpty()) {
@@ -50,14 +48,14 @@ public class Main {
 							int ny = y + dy[dir];
 							int nx = x + dx[dir];
 							if (ny < 0 || ny >= n || nx < 0 || nx >= n) continue;
-							if (tmp[ny][nx] == 0 || isVisited[ny][nx]) continue;
-							isVisited[ny][nx] = true;
+							if (tmp[ny][nx] == 0) continue;
+							tmp[ny][nx] = 0;
 							q.offer(new int[]{ny, nx});
 						}
 					}
 				}
 			}
-			ans = Math.max(ans, safeArea);
+			ans = Math.max(ans, cnt);
 		}
 		System.out.println(ans);
 	}
