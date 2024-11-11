@@ -1,62 +1,60 @@
 import java.io.*;
 import java.util.*;
 
+// BFS, O(n * h * r * c)
 public class Main {
 
+	static int[] dz = {-1, 1, 0, 0, 0, 0};
+	static int[] dy = {0, 0, -1, 1, 0, 0};
+	static int[] dx = {0, 0, 0, 0, -1, 1};
+	static Queue<int[]> q; // h, r, c, move
 	public static void main(String[] args) throws IOException {
+
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-
-		int dz[] = {-1, 1, 0, 0, 0, 0};
-		int dy[] = {0, 0, -1, 1, 0, 0};
-		int dx[] = {0, 0, 0, 0, -1, 1};
-
 		StringBuilder sb = new StringBuilder();
+
 		while (true) {
 			StringTokenizer st = new StringTokenizer(br.readLine());
+
 			int h = Integer.parseInt(st.nextToken());
 			int r = Integer.parseInt(st.nextToken());
 			int c = Integer.parseInt(st.nextToken());
+
 			if (h == 0 && r == 0 && c == 0) break;
 
-			int[][][] dist = new int[h][r][c];
-			Queue<int[]> q = new LinkedList<>();
+			q = new LinkedList<>();
+			int[] arriveCoord = new int[3];
 
-			for (int k = 0; k < h; ++k) {
-				for (int i = 0; i < r; ++i) {
-					for (int j = 0; j < c; ++j)
-						dist[k][i][j] = -1;
-				}
-			}
 			char[][][] board = new char[h][r][c];
-			int ez = 0, ey = 0, ex = 0;
-			for (int k = 0; k < h; ++k) {
-				for (int i = 0; i < r; ++i) {
-					String line = br.readLine();
-					for (int j = 0; j < c; ++j) {
-						board[k][i][j] = line.charAt(j);
-						if (board[k][i][j] == 'S') {
-							dist[k][i][j] = 0;
-							q.offer(new int[]{k, i, j});
-							board[k][i][j] = '.';
+			for (int i = 0; i < h; ++i) {
+				for (int j = 0; j < r; ++j) {
+					char[] line = br.readLine().toCharArray();
+					for (int k = 0; k < c; ++k) {
+						board[i][j][k] = line[k];
+						if (board[i][j][k] == 'S') {
+							board[i][j][k] = 'a';
+							q.offer(new int[]{i, j, k, 0});
 						}
-						if (board[k][i][j] == 'E') {
-							board[k][i][j] = '.';
-							ez = k;
-							ey = i;
-							ex = j;
+						else if (board[i][j][k] == 'E') {
+							arriveCoord[0] = i; arriveCoord[1] = j; arriveCoord[2] = k;
+							board[i][j][k] = '.';
 						}
 					}
 				}
 				br.readLine();
 			}
-			int ans = -1;
+
+			int ans = 0;
+			boolean isArrived = false;
 			while (!q.isEmpty()) {
 				var cur = q.poll();
 				int z = cur[0];
 				int y = cur[1];
 				int x = cur[2];
-				if (z == ez && y == ey && x == ex) {
-					ans = dist[z][y][x];
+				int move = cur[3];
+				if (z == arriveCoord[0] && y == arriveCoord[1] && x == arriveCoord[2]) {
+					isArrived = true;
+					ans = move;
 					break;
 				}
 				for (int dir = 0; dir < 6; ++dir) {
@@ -64,13 +62,16 @@ public class Main {
 					int ny = y + dy[dir];
 					int nx = x + dx[dir];
 					if (nz < 0 || nz >= h || ny < 0 || ny >= r || nx < 0 || nx >= c) continue;
-					if (board[nz][ny][nx] != '.' || dist[nz][ny][nx] != -1) continue;
-					dist[nz][ny][nx] = dist[z][y][x] + 1;
-					q.offer(new int[]{nz, ny, nx});
+					if (board[nz][ny][nx] != '.') continue;
+					board[nz][ny][nx] = 'a';
+					q.offer(new int[]{nz, ny, nx, move + 1});
 				}
 			}
-			if (ans == -1) sb.append("Trapped!\n");
-			else sb.append("Escaped in " + ans + " minute(s).\n");
+			if (!isArrived) {
+				sb.append("Trapped!\n");
+				continue;
+			}
+			sb.append("Escaped in " + ans + " minute(s).\n");
 		}
 		System.out.println(sb);
 	}
