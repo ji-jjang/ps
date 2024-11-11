@@ -2,41 +2,40 @@ import java.io.*;
 import java.util.*;
 
 public class Main {
-
 	public static void main(String[] args) throws IOException {
+
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
 		StringTokenizer st = new StringTokenizer(br.readLine());
-
 		int n = Integer.parseInt(st.nextToken());
 		int k = Integer.parseInt(st.nextToken());
 
-		boolean isVisited[] = new boolean[100_001];
-
-		Queue<int[]> q = new LinkedList<>();
+		Queue<int[]> q = new LinkedList<>(); // location, moveCount
+		boolean[] isVisited = new boolean[100_001];
 		q.offer(new int[]{n, 0});
-		int ans = Integer.MAX_VALUE;
+
 		while (!q.isEmpty()) {
+
 			var cur = q.poll();
-			int y = cur[0];
-			int time = cur[1];
-			if (y == k) {
-				ans = Math.min(ans, time);
-				break; 
+			int lot = cur[0];
+			int move = cur[1];
+			if (lot == k) {
+				System.out.println(move);
+				break;
 			}
-			if (y - 1 >= 0 && !isVisited[y - 1]) {
-				isVisited[y - 1] = true;
-				q.offer(new int[]{y - 1, time + 1});
+
+			if (lot - 1 >= 0 && !isVisited[lot - 1]) {
+				isVisited[lot - 1] = true;
+				q.offer(new int[]{lot - 1, move + 1});
 			}
-			if (y + 1 <= 100_000 && !isVisited[y + 1]) {
-				isVisited[y + 1] = true;
-				q.offer(new int[]{y + 1, time + 1});
+			if (lot + 1 <= 100_000 && !isVisited[lot + 1]) {
+				isVisited[lot + 1] = true;
+				q.offer(new int[]{lot + 1, move + 1});
 			}
-			if (y * 2 <= 100_000 && !isVisited[y * 2]) {
-				isVisited[y * 2] = true;
-				q.offer(new int[]{y * 2, time + 1});
+			if (lot * 2 <= 100_000 && !isVisited[lot * 2]) {
+				isVisited[lot * 2] = true;
+				q.offer(new int[]{lot * 2, move + 1});
 			}
 		}
-		System.out.println(ans);
 	}
 }
