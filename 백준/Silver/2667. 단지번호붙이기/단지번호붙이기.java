@@ -1,56 +1,57 @@
-import java.util.*;
 import java.io.*;
+import java.util.*;
 
+// BFS, O()
 public class Main {
+
+	static int[] dy = {-1, 0, 1, 0};
+	static int[] dx = {0, 1, 0, -1};
+	static Queue<int[]> q = new LinkedList<>();
+	static PriorityQueue<Integer> pq = new PriorityQueue<>();
 	public static void main(String[] args) throws IOException {
+
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
+		StringBuilder sb = new StringBuilder();
 		int n = Integer.parseInt(br.readLine());
-
 		int[][] board = new int[n][n];
-		boolean[][] isVisited = new boolean[n][n];
-
 		for (int i = 0; i < n; ++i) {
-			String line = br.readLine();
+			char[] line = br.readLine().toCharArray();
 			for (int j = 0; j < n; ++j) {
-				board[i][j] = line.charAt(j) - '0';
+				board[i][j] = line[j] - '0';
 			}
 		}
-		int[] dy = {-1, 0, 1, 0};
-		int[] dx = {0, 1, 0, -1};
-		Queue<int[]> q = new LinkedList<>();
-		List<Integer> areas = new ArrayList<>();
-		StringBuilder sb = new StringBuilder();
+
+		int areaCount = 0;
 		for (int i = 0; i < n; ++i) {
 			for (int j = 0; j < n; ++j) {
-				int cnt = 0;
-				if (!isVisited[i][j] && board[i][j] == 1) {
-					isVisited[i][j] = true;
+				if (board[i][j] == 1) {
+					++areaCount;
+					board[i][j] = 2;
 					q.offer(new int[]{i, j});
-					++cnt;
 				}
+				int cnt = 0;
 				while (!q.isEmpty()) {
 					var cur = q.poll();
+					++cnt;
 					int y = cur[0];
 					int x = cur[1];
 					for (int dir = 0; dir < 4; ++dir) {
 						int ny = y + dy[dir];
 						int nx = x + dx[dir];
 						if (ny < 0 || ny >= n || nx < 0 || nx >= n) continue;
-						if (board[ny][nx] == 0 || isVisited[ny][nx]) continue;
-						++cnt;
-						isVisited[ny][nx] = true;
+						if (board[ny][nx] != 1) continue;
+						board[ny][nx] = 2;
 						q.offer(new int[]{ny, nx});
 					}
 				}
-				if (cnt != 0)
-					areas.add(cnt);
+				if (cnt > 0) pq.offer(cnt);
 			}
 		}
-		areas.sort((a, b) -> Integer.compare(a, b));
-		sb.append(areas.size() + "\n");
-		for (var e : areas) {
-			sb.append(e + "\n");
+		sb.append(areaCount + "\n");
+		while (!pq.isEmpty()) {
+			var cur = pq.poll();
+			sb.append(cur + "\n");
 		}
 		System.out.println(sb);
 	}
