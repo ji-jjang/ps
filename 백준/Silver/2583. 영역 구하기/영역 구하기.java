@@ -1,19 +1,24 @@
-import java.util.*;
 import java.io.*;
+import java.util.*;
 
+// BFS, O(t * r * c)
 public class Main {
+
+	static int[] dy = {-1, 0, 1, 0};
+	static int[] dx = {0, 1, 0, -1};
+	static Queue<int[]> q = new LinkedList<>();
 	public static void main(String[] args) throws IOException {
+
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
+		StringBuilder sb = new StringBuilder();
 		StringTokenizer st = new StringTokenizer(br.readLine());
 		int r = Integer.parseInt(st.nextToken());
 		int c = Integer.parseInt(st.nextToken());
-		int t = Integer.parseInt(st.nextToken());
-
+		int k = Integer.parseInt(st.nextToken());
 		int[][] board = new int[r][c];
-		boolean[][] isVisited = new boolean[r][c];
-
-		while (t-- > 0) {
+		PriorityQueue<Integer> pq = new PriorityQueue<>();
+		while (k-- > 0) {
 			st = new StringTokenizer(br.readLine());
 			int sx = Integer.parseInt(st.nextToken());
 			int sy = Integer.parseInt(st.nextToken());
@@ -25,43 +30,36 @@ public class Main {
 				}
 			}
 		}
-		int[] dy = {-1, 0, 1, 0};
-		int[] dx = {0, 1, 0, -1};
-		Queue<int[]> q = new LinkedList<>();
-		List<Integer> emptyAreas = new ArrayList<>();
-		StringBuilder sb = new StringBuilder();
-		int ans = 0;
+		int areaCount = 0;
 		for (int i = 0; i < r; ++i) {
 			for (int j = 0; j < c; ++j) {
-				int cnt = 0;
-				if (!isVisited[i][j] && board[i][j] == 0) {
-					isVisited[i][j] = true;
+				if (board[i][j] == 0) {
+					++areaCount;
+					board[i][j] = 1;
 					q.offer(new int[]{i, j});
-					++ans;
-					++cnt;
 				}
+				int cnt = 0;
 				while (!q.isEmpty()) {
 					var cur = q.poll();
+					++cnt;
 					int y = cur[0];
 					int x = cur[1];
 					for (int dir = 0; dir < 4; ++dir) {
 						int ny = y + dy[dir];
 						int nx = x + dx[dir];
 						if (ny < 0 || ny >= r || nx < 0 || nx >= c) continue;
-						if (board[ny][nx] == 1 || isVisited[ny][nx]) continue;
-						++cnt;
-						isVisited[ny][nx] = true;
+						if (board[ny][nx] != 0) continue;
+						board[ny][nx] = 1;
 						q.offer(new int[]{ny, nx});
 					}
 				}
-				if (cnt != 0) 
-					emptyAreas.add(cnt);
+				if (cnt > 0) pq.offer(cnt);
 			}
 		}
-		emptyAreas.sort((a, b) -> Integer.compare(a, b));
-		sb.append(ans + "\n");
-		for (var e : emptyAreas) {
-			sb.append(e + " ");
+		sb.append(areaCount + "\n");
+		while (!pq.isEmpty()) {
+			var cur = pq.poll();
+			sb.append(cur + " ");
 		}
 		System.out.println(sb);
 	}
