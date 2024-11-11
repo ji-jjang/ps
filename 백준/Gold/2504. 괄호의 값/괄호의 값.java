@@ -2,53 +2,49 @@ import java.io.*;
 import java.util.*;
 
 public class Main {
-
 	public static void main(String[] args) throws IOException {
 
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
-		Map<Character, Character> m = new HashMap<>();
-		Stack<Character> s = new Stack<>();
-		m.put(')', '(');
-		m.put(']', '[');
+		char[] line = br.readLine().toCharArray();
+		Deque<Character> dq = new ArrayDeque<>();
 
-		int mult = 1;
 		int ans = 0;
-		String line = br.readLine();
 		boolean isCorrect = true;
-		for (int i = 0; i < line.length(); ++i) {
-			char c = line.charAt(i);
-			if (c == '(') {
+		int mult = 1;
+		for (int i = 0; i < line.length; ++i) {
+			if (line[i] == '(') {
+				dq.offerFirst(line[i]);
 				mult *= 2;
-				s.push(c);
 			}
-			else if (c == '[') {
+			else if (line[i] == '[') {
+				dq.offerFirst(line[i]);
 				mult *= 3;
-				s.push(c);
 			}
-			else if (c == ')') {
-				if (s.isEmpty() || s.peek() != m.get(c)) {
+			else if (line[i] == ')') {
+				if (dq.isEmpty() || dq.peekFirst() != '(') {
 					isCorrect = false;
 					break;
 				}
-				if (line.charAt(i - 1) == '(')
+				dq.pollFirst();
+				if (line[i - 1] == '(')
 					ans += mult;
 				mult /= 2;
-				s.pop();
 			}
-			else if (c == ']') {
-				if (s.isEmpty() || s.peek() != m.get(c)) {
+			else if (line[i] == ']') {
+				if (dq.isEmpty() || dq.peekFirst() != '[') {
 					isCorrect = false;
 					break;
 				}
-				if (line.charAt(i - 1) == '[')
+				dq.pollFirst();
+				if (line[i - 1] == '[')
 					ans += mult;
 				mult /= 3;
-				s.pop();
 			}
 		}
-		if (!s.isEmpty()) isCorrect = false;
-		if (!isCorrect) ans = 0;
+		if (!dq.isEmpty()) isCorrect = false;
+		if (!isCorrect)
+			ans = 0;
 		System.out.println(ans);
 	}
 }
