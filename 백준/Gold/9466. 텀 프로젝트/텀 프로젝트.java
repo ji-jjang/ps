@@ -1,61 +1,70 @@
 import java.io.*;
 import java.util.*;
 
+// BFS, O(t * n)
 public class Main {
-	public static void main(String[] args) throws IOException  {
+
+	static Queue<Integer> q;
+	static Set<Integer> cycles;
+	static int[] stu;
+	static boolean[] isVisited;
+	static boolean[] isFinished;
+
+	public static void main(String[] args) throws IOException {
+
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		StringBuilder sb = new StringBuilder();
 
 		int t = Integer.parseInt(br.readLine());
 		while (t-- > 0) {
+
 			int n = Integer.parseInt(br.readLine());
-			int[] students = new int[n + 1];
-
 			StringTokenizer st = new StringTokenizer(br.readLine());
-			for (int i = 1; i <= n; ++i) {
-				students[i] = Integer.parseInt(st.nextToken());
+			stu = new int[n + 1];
+			isVisited = new boolean[n + 1];
+			isFinished = new boolean[n + 1];
+			cycles = new HashSet<>();
+			for (int i = 1; i <= n; ++i) {	
+				stu[i] = Integer.parseInt(st.nextToken());
 			}
-
-			boolean[] isVisited = new boolean[n + 1];
-			boolean[] isFinished = new boolean[n + 1];
-			int ans = 0;
-
-			for (int i = 1; i <= n; i++) {
+			for (int i = 1; i <= n; ++i) {
 				if (!isVisited[i]) {
-					ans += bfs(i, students, isVisited, isFinished);
+					bfs(i);
 				}
 			}
-			System.out.println(ans);
+			sb.append(n - cycles.size() + "\n");
 		}
+		System.out.println(sb);
 	}
-	static int bfs(int st, int[] students, boolean[] isVisited, boolean[] isFinished) {
-		Queue<Integer> q = new LinkedList<>();
-		Map<Integer, Integer> m = new HashMap<>();
+	static void bfs(int st) {
 
-		m.put(st, 0);
+		q = new LinkedList<>();
+		Map<Integer, Integer> path = new HashMap<>(); // cur, parent
+
 		isVisited[st] = true;
-		q.add(st);
-
-		int cycleLength = 0;
+		path.put(st, null);
+		q.offer(st);
 		while (!q.isEmpty()) {
 			int cur = q.poll();
-			int nxt = students[cur];
-
+			int nxt = stu[cur];
 			if (!isVisited[nxt]) {
 				isVisited[nxt] = true;
 				q.add(nxt);
-				m.put(nxt, m.get(cur) + 1);
+				path.put(nxt, cur);
 			} else {
 				if (!isFinished[nxt]) {
-					cycleLength = m.get(cur) - m.get(nxt) + 1;
+
+					while (cur != nxt) {
+						cycles.add(cur);
+						cur = path.get(cur);
+					}
+					cycles.add(nxt);
 				}
 				break;
 			}
 		}
-
-		for (int node : m.keySet()) {
-			isFinished[node] = true;
+		for (var e : path.keySet()) {
+			isFinished[e] = true;
 		}
-
-		return m.size() - cycleLength;
 	}
 }
