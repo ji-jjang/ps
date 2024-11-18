@@ -1,60 +1,57 @@
 import java.io.*;
 import java.util.*;
 
+// BFS, O(500_000)
 public class Main {
+
+	final static int MAX = 500_000;
 
 	public static void main(String[] args) throws IOException {
 
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
-		StringTokenizer st = new StringTokenizer(br.readLine());
-		int n = Integer.parseInt(st.nextToken());
-		int k = Integer.parseInt(st.nextToken());
+		String[] tokens = br.readLine().split(" ");
+
+		int n = Integer.parseInt(tokens[0]);
+		int k = Integer.parseInt(tokens[1]);
 
 		if (n == k) {
 			System.out.println(0);
-			return;
+			return ;
 		}
 
-		int[][] dist = new int[500_004][2];
-		Queue<int[]> q = new LinkedList<>();
-		dist[n][0] = 0;
-		q.offer(new int[]{n, 0});
+		Queue<Integer> q = new LinkedList<>();
+		boolean[][] isVisited = new boolean[MAX + 1][2];
+		isVisited[n][0] = true;
+		q.offer(n);
 
+		int ans = Integer.MAX_VALUE;
+		int time = 0;
 		while (!q.isEmpty()) {
-			int[] cur = q.poll();
-			int pos = cur[0];
-			int time = cur[1];
-			int nxtTime = time + 1;
+			k += time;
 
-			if (pos * 2 <= 500_000 && dist[pos * 2][nxtTime % 2] == 0) {
-				dist[pos * 2][nxtTime % 2] = nxtTime;
-				q.offer(new int[]{pos * 2, nxtTime});
-			}
-			if (pos - 1 >= 0 && dist[pos - 1][nxtTime % 2] == 0) {
-				dist[pos - 1][nxtTime % 2] = nxtTime;
-				q.offer(new int[]{pos - 1, nxtTime});
-			}
-			if (pos + 1 <= 500_000 && dist[pos + 1][nxtTime % 2] == 0) {
-				dist[pos + 1][nxtTime % 2] = nxtTime;
-				q.offer(new int[]{pos + 1, nxtTime});
-			}
-		}
-		boolean isFound = false;
-		int ans = 0;
-		while (k <= 500000) {
-			if (dist[k][ans % 2] <= ans) {
-				isFound = true;
+			if (k > MAX) break;
+
+			if (isVisited[k][time % 2]) {
+				ans = time;
 				break;
 			}
-			++ans;
-			k += ans;
-		}
 
-		if (isFound) {
-			System.out.println(ans);
-			return;
+			int size = q.size();
+
+			for (int i = 0; i < size; ++i) {
+				int pos = q.poll();
+
+				for (var nxtPos : new int[]{pos - 1 , pos + 1, pos * 2}) {
+					if (nxtPos >= 0 && nxtPos <= MAX && !isVisited[nxtPos][(time + 1) % 2]) {
+						isVisited[nxtPos][(time + 1) % 2] = true;
+						q.offer(nxtPos);
+					}
+				}
+			}
+			++time;
 		}
-		System.out.println(-1);
+		if (ans > MAX) ans = -1;
+		System.out.println(ans);
 	}
 }
