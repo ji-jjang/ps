@@ -3,66 +3,52 @@ import java.util.*;
 
 public class Main {
 
-
 	public static void main(String[] args) throws IOException {
 
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
 		StringTokenizer st = new StringTokenizer(br.readLine());
-		int n = Integer.parseInt(st.nextToken());
-		int m = Integer.parseInt(st.nextToken());
+		long n = Long.parseLong(st.nextToken());
+		long m = Long.parseLong(st.nextToken()) - 1;
 
-		int[] ans = recur(n, m - 1);
+		int[] ans = recur(n, m);
 		System.out.println(ans[0] + " " + ans[1]);
 	}
 
 	public static int[] recur(long n, long m) {
 
-		int[] coord = new int[2];
 		if (n == 2) {
 			if (m == 0) {
-				coord[0] = 1; coord[1] = 1;
-				return coord;
-			}
-			if (m == 1) {
-				coord[0] = 1; coord[1] = 2;
-				return coord;
-			}
-			if (m == 2) {
-				coord[0] = 2; coord[1] = 2;
-				return coord;
-			}
-			if (m == 3) {
-				coord[0] = 2; coord[1] = 1;
-				return coord;
+				return new int[]{1, 1};
+			} else if (m == 1) {
+				return new int[]{1, 2};
+			} else if (m == 2) {
+				return new int[]{2, 2};
+			} else if (m == 3) {
+				return new int[]{2, 1};
 			}
 		}
 
-		long nn = (n >> 1);
+		long nn = n / 2;
 		long quadrant = m / (nn * nn);
 		long mm = m % (nn * nn);
-		coord = recur(nn, mm);
 
-		if (quadrant == 0) {
-			int tmp = coord[0];
-			coord[0] = coord[1];
-			coord[1] = tmp;
-			return coord;
-		}
-		if (quadrant == 1) {
-			coord[1] += nn;
-			return coord;
-		}
-		if (quadrant == 2) {
-			coord[0] += nn;
-			coord[1] += nn;
-			return coord;
-		}
+		int[] coord = recur(nn, mm);
 
 		int tmp = coord[0];
-		coord[0] = (int)(2 * nn - coord[1] + 1);
-		coord[1] = (int)(nn - tmp + 1);
+		if (quadrant == 0) {
+			coord[0] = coord[1];
+			coord[1] = tmp;
+		} else if (quadrant == 1) {
+			coord[1] += nn;
+		} else if (quadrant == 2) {
+			coord[0] += nn;
+			coord[1] += nn;
+		} else if (quadrant == 3) {
+			coord[0] = (int)(2 * nn - coord[1] + 1);
+			coord[1] = (int)(nn - tmp + 1);
+		}
+
 		return coord;
 	}
 }
-
