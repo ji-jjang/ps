@@ -3,36 +3,36 @@ import java.util.*;
 
 public class Main {
 
+	static int n, m;
 	public static void main(String[] args) throws IOException {
 
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		StringTokenizer st = new StringTokenizer(br.readLine());
 
-		int n = Integer.parseInt(st.nextToken());
-		int m = Integer.parseInt(st.nextToken());
+		String[] tokens = br.readLine().split(" ");
+		n = Integer.parseInt(tokens[0]);
+		m = Integer.parseInt(tokens[1]);
 
-		int[] nums = new int[n + 1];
-		boolean[] isSelected = new boolean[n + 1];
-
-		dfs(0, n, m, nums, isSelected);
+		StringBuilder sb = new StringBuilder();
+		dfs(0, 1, sb, new int[m], new boolean[n + 1]);
+		System.out.println(sb);
 	}
 
-	static void dfs(int depth, int n, int m, int[] nums, boolean[] isSelected) {
+	static void dfs(int depth, int st, StringBuilder sb, int[] nums, boolean[] isVisited) {
 
 		if (depth == m) {
 			for (int i = 0; i < m; ++i) {
-				System.out.printf(nums[i] + " ");
+				sb.append(nums[i] + " ");
 			}
-			System.out.println();
+			sb.append("\n");
 			return;
 		}
+
 		for (int i = 1; i <= n; ++i) {
-			if (isSelected[i])
-				continue;
-			isSelected[i] = true;
+			if (isVisited[i]) continue;
+			isVisited[i] = true;
 			nums[depth] = i;
-			dfs(depth + 1, n, m, nums, isSelected);
-			isSelected[i] = false;
+			dfs(depth + 1, i + 1, sb, nums, isVisited);
+			isVisited[i] = false;
 		}
 	}
 }
