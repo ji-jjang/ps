@@ -3,31 +3,37 @@ import java.util.*;
 
 public class Main {
 
+	static int n, s;
+	static int[] nums;
+	static int ans;
 	public static void main(String[] args) throws IOException {
 
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
-		StringTokenizer st = new StringTokenizer(br.readLine());
-		int n = Integer.parseInt(st.nextToken());
-		int s = Integer.parseInt(st.nextToken());
-		int[] nums = new int[n];
-		st = new StringTokenizer(br.readLine());
+		String[] tokens = br.readLine().split(" ");
+		n = Integer.parseInt(tokens[0]);
+		s = Integer.parseInt(tokens[1]);
+
+		nums = new int[n];
+		tokens = br.readLine().split(" ");
 		for (int i = 0; i < n; ++i) {
-			nums[i] = Integer.parseInt(st.nextToken());
+			nums[i] = Integer.parseInt(tokens[i]);
 		}
 
-		int ans = dfs(0, 0, 0, n, s, nums);
-		if (s == 0) ans -= 1;
+		dfs(0, 0);
+		if (s == 0) --ans;
 		System.out.println(ans);
 	}
 
-	public static int dfs(int depth, int sum, int cnt, int n, int s, int[] nums) {
-
-		if (depth == n) return sum == s ? 1 : 0;
-
-		int ans = 0;
-		ans += dfs(depth + 1, sum + nums[depth], cnt + 1, n, s, nums);
-		ans += dfs(depth + 1, sum, cnt, n, s, nums);
-		return ans;
+	static void dfs(int depth, int sum) {
+		
+		if (depth == n) {
+			if (sum == s) {
+				++ans;
+			}
+			return;
+		}
+		dfs(depth + 1, sum + nums[depth]);
+		dfs(depth + 1, sum);
 	}
 }
