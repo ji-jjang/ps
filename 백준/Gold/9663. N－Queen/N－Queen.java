@@ -3,37 +3,37 @@ import java.util.*;
 
 public class Main {
 
+	static boolean[] diag1Check = new boolean[50];
+	static boolean[] diag2Check = new boolean[50];
+	static boolean[] colCheck = new boolean[15];
+	static int n;
+	static int ans = 0;
 	public static void main(String[] args) throws IOException {
 
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
-		int n = Integer.parseInt(br.readLine());
-		boolean[] col = new boolean[15];
-		boolean[] diag1 = new boolean[50];
-		boolean[] diag2 = new boolean[50];
+		n = Integer.parseInt(br.readLine());
 
-		int ans = dfs(0, n, col, diag1, diag2);
+		dfs(0);
 		System.out.println(ans);
 	}
 
-	static int dfs(int row, int n, boolean[] col, boolean[] diag1, boolean[] diag2) {
+	static void dfs(int row) {
 
 		if (row == n) {
-			return 1;
+			++ans;
+			return;
 		}
-
-		int ans = 0;
 		for (int i = 0; i < n; ++i) {
-			if (col[i] || diag1[i + row] || diag2[row - i + n - 1])
+			if (colCheck[i] || diag1Check[i + row] || diag2Check[n + row - i])
 				continue;
-			col[i] = true;
-			diag1[i + row] = true;
-			diag2[row - i + n - 1] = true;
-			ans += dfs(row + 1, n, col, diag1, diag2);
-			col[i] = false;
-			diag1[i + row] = false;
-			diag2[row - i + n - 1] = false;
+			colCheck[i] = true;
+			diag1Check[i + row] = true;
+			diag2Check[n - i + row] = true;
+			dfs(row + 1);
+			colCheck[i] = false;
+			diag1Check[i + row] = false;
+			diag2Check[n - i + row] = false;
 		}
-		return ans;
 	}
 }
