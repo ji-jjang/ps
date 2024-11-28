@@ -3,21 +3,22 @@ import java.util.*;
 
 public class Main {
 
+	static int n, m;
 	public static void main(String[] args) throws IOException {
 
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
-		StringTokenizer st = new StringTokenizer(br.readLine());
-		int n = Integer.parseInt(st.nextToken());
-		int m = Integer.parseInt(st.nextToken());
+		String[] tokens = br.readLine().split(" ");
 
-		int[] nums = new int[m + 1];
+		n = Integer.parseInt(tokens[0]);
+		m = Integer.parseInt(tokens[1]);
+
 		StringBuilder sb = new StringBuilder();
-		dfs(0, n, m, nums, sb);
+		dfs(0, new int[n + 1], sb);
 		System.out.println(sb);
 	}
 
-	public static void dfs(int depth, int n, int m, int[] nums, StringBuilder sb) {
+	static void dfs(int depth, int[] nums, StringBuilder sb) {
 
 		if (depth == m) {
 			for (int i = 0; i < m; ++i) {
@@ -29,7 +30,7 @@ public class Main {
 
 		for (int i = 1; i <= n; ++i) {
 			nums[depth] = i;
-			dfs(depth + 1, n, m, nums, sb);
+			dfs(depth + 1, nums, sb);
 		}
 	}
 }
