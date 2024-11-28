@@ -3,44 +3,45 @@ import java.util.*;
 
 public class Main {
 
+	static int n, m;
+	static int[] nums;
 	public static void main(String[] args) throws IOException {
 
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
-		StringTokenizer st = new StringTokenizer(br.readLine());
-		int n = Integer.parseInt(st.nextToken());
-		int m = Integer.parseInt(st.nextToken());
-		int[] nums = new int[n];
-		boolean[] isSelected = new boolean[n];
-		int[] seq = new int[m + 1];
+		String[] tokens = br.readLine().split(" ");
 
-		st = new StringTokenizer(br.readLine());
+		n = Integer.parseInt(tokens[0]);
+		m = Integer.parseInt(tokens[1]);
+		nums = new int[n];
+
+		tokens = br.readLine().split(" ");
 		for (int i = 0; i < n; ++i) {
-			nums[i] = Integer.parseInt(st.nextToken());
+			nums[i] = Integer.parseInt(tokens[i]);
 		}
 		Arrays.sort(nums);
 
 		StringBuilder sb = new StringBuilder();
-		dfs(0, n, m, nums, seq, sb, isSelected);
+		dfs(0, new int[n + 1], new boolean[n + 1], sb);
 		System.out.println(sb);
 	}
 
-	public static void dfs(int depth, int n, int m, int[] nums, int[] seq, StringBuilder sb, boolean[] isSelected) {
+	static void dfs(int depth, int[] selected, boolean[] isVisited, StringBuilder sb) {
 
 		if (depth == m) {
 			for (int i = 0; i < m; ++i) {
-				sb.append(seq[i] + " ");
+				sb.append(selected[i] + " ");
 			}
 			sb.append("\n");
 			return;
 		}
 
 		for (int i = 0; i < n; ++i) {
-			if (isSelected[i]) continue;
-			isSelected[i] = true;
-			seq[depth] = nums[i];
-			dfs(depth + 1, n, m, nums, seq, sb, isSelected);
-			isSelected[i] = false;
+			if (isVisited[i]) continue;
+			isVisited[i] = true;
+			selected[depth] = nums[i];
+			dfs(depth + 1, selected, isVisited, sb);
+			isVisited[i] = false;
 		}
 	}
 }
