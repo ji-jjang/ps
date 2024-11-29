@@ -3,43 +3,44 @@ import java.util.*;
 
 public class Main {
 
+	static int[] nums;
+	static int n;
 	public static void main(String[] args) throws IOException {
 
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
 		StringBuilder sb = new StringBuilder();
 		while (true) {
-			StringTokenizer st = new StringTokenizer(br.readLine());
-			int n = Integer.parseInt(st.nextToken());
+			String[] tokens = br.readLine().split(" ");
+
+			n = Integer.parseInt(tokens[0]);
+
 			if (n == 0) break;
-			int[] nums = new int[n];
-			int[] seq = new int[6];
-			boolean[] isSelected = new boolean[n];
+
+			nums = new int[n];
+
 			for (int i = 0; i < n; ++i) {
-				nums[i] = Integer.parseInt(st.nextToken());
+				nums[i] = Integer.parseInt(tokens[i + 1]);
 			}
-			dfs(0, 0, n, nums, seq, sb, isSelected);
+			dfs(0, 0, new int[n], sb);
 			sb.append("\n");
 		}
 		System.out.println(sb);
 	}
 
-	public static void dfs(int depth, int st, int n, int[] nums, int[] seq, StringBuilder sb, boolean[] isSelected) {
+	static void dfs(int depth, int st, int[] selected, StringBuilder sb) {
 
 		if (depth == 6) {
 			for (int i = 0; i < 6; ++i) {
-				sb.append(seq[i] + " ");
+				sb.append(selected[i] + " ");
 			}
 			sb.append("\n");
 			return;
 		}
 
 		for (int i = st; i < n; ++i) {
-			if (isSelected[i]) continue;
-			isSelected[i] = true;
-			seq[depth] = nums[i];
-			dfs(depth + 1, i + 1, n, nums, seq, sb, isSelected);
-			isSelected[i] = false;
+			selected[depth] = nums[i];
+			dfs(depth + 1, i + 1, selected, sb);
 		}
 	}
 }
