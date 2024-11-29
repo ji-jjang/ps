@@ -3,54 +3,56 @@ import java.util.*;
 
 public class Main {
 
+	static int l, c;
+	static char[] chars;
 	public static void main(String[] args) throws IOException {
 
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
-		StringBuilder sb = new StringBuilder();
-		StringTokenizer st = new StringTokenizer(br.readLine());
+		String[] tokens = br.readLine().split(" ");
 
-		int l = Integer.parseInt(st.nextToken());
-		int c = Integer.parseInt(st.nextToken());
-		char[] seq = new char[l];
-		st = new StringTokenizer(br.readLine());
+		l = Integer.parseInt(tokens[0]);
+		c = Integer.parseInt(tokens[1]);
+
+		chars = new char[c];
+		tokens = br.readLine().split(" ");
 		for (int i = 0; i < c; ++i) {
-			sb.append(st.nextToken().charAt(0));
+			chars[i] = tokens[i].charAt(0);
 		}
-		char[] chars = sb.toString().toCharArray();
 		Arrays.sort(chars);
-		sb.setLength(0);
-		dfs(0, 0, l, c, chars, seq, sb);
+		StringBuilder sb = new StringBuilder();
+		dfs(0, 0, new char[l], sb);
 		System.out.println(sb);
 	}
 
-	public static void dfs(int depth, int st, int l, int c, char[] chars, char[] seq, StringBuilder sb) {
+	static void dfs(int depth, int st, char[] selected, StringBuilder sb) {
 
 		if (depth == l) {
-			if (isValid(seq)) {
+			if (checkOneToCondition(selected)) {
 				for (int i = 0; i < l; ++i) {
-					sb.append(seq[i]);
+					sb.append(selected[i]);
 				}
 				sb.append("\n");
 			}
 			return;
 		}
-
 		for (int i = st; i < c; ++i) {
-			seq[depth] = chars[i];
-			dfs(depth + 1, i + 1, l, c, chars, seq, sb);
+			selected[depth] = chars[i];
+			dfs(depth + 1, i + 1, selected, sb);
 		}
 	}
 
-	public static boolean isValid(char[] seq) {
-		int aeiouCnt = 0;
-		int otherCnt = 0;
-		for (int i = 0; i < seq.length; ++i) {
-			if (seq[i] == 'a' || seq[i] == 'e' || seq[i] == 'i' || seq[i] == 'o' || seq[i] == 'u')
-				++aeiouCnt;
-			else
-				++otherCnt;
+	static boolean checkOneToCondition(char[] selected) {
+
+		int aCnt = 0;
+		int bCnt = 0;
+		for (var c : selected) {
+			if (c == 'a' || c == 'e' || c == 'i' || c == 'o' || c == 'u') {
+				++aCnt;
+			} else {
+				++bCnt;
+			}
 		}
-		return (aeiouCnt >= 1 && otherCnt >= 2);
+		return (aCnt >= 1 && bCnt >= 2);
 	}
 }
