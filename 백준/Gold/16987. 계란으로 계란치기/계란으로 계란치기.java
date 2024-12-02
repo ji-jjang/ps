@@ -1,62 +1,60 @@
-import java.io.*;
 import java.util.*;
+import java.io.*;
 
 public class Main {
+
+	static int n;
+	static int[][] eggs;
+	static int ans = 0;
 
 	public static void main(String[] args) throws IOException {
 
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
-		int n = Integer.parseInt(br.readLine());
-
-		List<int[]> eggs = new ArrayList<>();
+		n = Integer.parseInt(br.readLine());
+		eggs = new int[n][2];
 		for (int i = 0; i < n; ++i) {
-			StringTokenizer st = new StringTokenizer(br.readLine());
-			int strength = Integer.parseInt(st.nextToken());
-			int weight = Integer.parseInt(st.nextToken());
-			eggs.add(new int[]{strength, weight});
+			int dur, weight;
+			String[] tokens = br.readLine().split(" ");
+			dur = Integer.parseInt(tokens[0]);
+			weight = Integer.parseInt(tokens[1]);
+			eggs[i] = new int[]{dur, weight};
 		}
-
-		int ans = dfs(0, n, eggs);
+		dfs(0);
 		System.out.println(ans);
 	}
 
-	public static int dfs(int depth, int n, List<int[]> eggs) {
+	static void dfs(int depth) {
 
 		if (depth == n) {
 			int cnt = 0;
 			for (int i = 0; i < n; ++i) {
-				if (eggs.get(i)[0] <= 0) {
-					++cnt;
-				}
+				if (eggs[i][0] <= 0) ++cnt;
 			}
-			return cnt;
-		}
-
-		if (eggs.get(depth)[0] <= 0 || !isRemain(depth, eggs)) {
-			return dfs(depth + 1, n, eggs);
-		}
-
-		int ans = 0;
-		for (int i = 0; i < n; ++i) {
-			if (i == depth || eggs.get(i)[0] <= 0) continue;
-			eggs.get(depth)[0] -= eggs.get(i)[1];
-			eggs.get(i)[0] -= eggs.get(depth)[1];
-			int cnt = dfs(depth + 1, n, eggs);
 			ans = Math.max(ans, cnt);
-			eggs.get(depth)[0] += eggs.get(i)[1];
-			eggs.get(i)[0] += eggs.get(depth)[1];
+			return;
 		}
-		return ans;
+
+		if (eggs[depth][0] <= 0 || !isRemain(depth)) {
+			dfs(depth + 1);
+			return;
+		}
+
+		for (int i = 0; i < n; ++i) {
+			if (i == depth || eggs[i][0] <= 0) continue;
+			eggs[depth][0] -= eggs[i][1];
+			eggs[i][0] -= eggs[depth][1];
+			dfs(depth + 1);
+			eggs[depth][0] += eggs[i][1];
+			eggs[i][0] += eggs[depth][1];
+		}
 	}
 
-	public static boolean isRemain(int depth, List<int[]> eggs) {
-
-		for (int i = 0; i < eggs.size(); ++i) {
-			if (i != depth && eggs.get(i)[0] > 0)
+	static boolean isRemain(int depth) {
+		for (int i = 0; i < n; ++i) {
+			if (i != depth && eggs[i][0] > 0) 
 				return true;
 		}
 		return false;
 	}
 }
-
