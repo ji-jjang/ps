@@ -1,57 +1,53 @@
-import java.io.*;
 import java.util.*;
-
+import java.io.*;
 
 public class Main {
 
+	static int n, m, k;
+	static int r, c;
+	static int[][] sticker;
 	static int[][] board;
-	static int[][][] sticker; // index, 2d point
-	static int[][] stickerInfo; // index, {r, c}
-
 	public static void main(String[] args) throws IOException {
 
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
-		StringTokenizer st = new StringTokenizer(br.readLine());
-		int r = Integer.parseInt(st.nextToken());
-		int c = Integer.parseInt(st.nextToken());
-		int k = Integer.parseInt(st.nextToken());
+		String[] tokens = br.readLine().split(" ");
+		n = Integer.parseInt(tokens[0]);
+		m = Integer.parseInt(tokens[1]);
+		k = Integer.parseInt(tokens[2]);
 
 		board = new int[44][44];
-		sticker = new int[k][14][14];
-		stickerInfo = new int[k][2];
-		for (int i = 0; i < k; ++i) {
-			st = new StringTokenizer(br.readLine());
-			stickerInfo[i][0] = Integer.parseInt(st.nextToken());
-			stickerInfo[i][1] = Integer.parseInt(st.nextToken());
-			for (int j = 0; j < stickerInfo[i][0]; ++j) {
-				st = new StringTokenizer(br.readLine());
-				for (int jj = 0; jj < stickerInfo[i][1]; ++jj) {
-					sticker[i][j][jj] = Integer.parseInt(st.nextToken());
+		for (int s = 0; s < k; ++s) {
+			tokens = br.readLine().split(" ");
+			r = Integer.parseInt(tokens[0]);
+			c = Integer.parseInt(tokens[1]);
+
+			sticker = new int[14][14];
+			for (int i = 0; i < r; i++) {
+				tokens = br.readLine().split(" ");
+				for (int j = 0; j < c; j++) {
+					sticker[i][j] = Integer.parseInt(tokens[j]);
 				}
 			}
-		}
-
-		for (int idx = 0; idx < k; ++idx) {
+			boolean canPut = false;
 			for (int dir = 0; dir < 4; ++dir) {
-				boolean isAttached = false;
-				rotateSticker(idx, dir);
-				for (int i = 0; i < r; ++i) {
-					for (int j = 0; j < c; ++j) {
-						if (canPutSticker(idx, i, j, r, c)) {
-							isAttached = true;
+				if (canPut) break;
+				rotateSticker(dir);
+				for (int i = 0; i <= n - r; ++i) {
+					if (canPut) break;
+					for (int j = 0; j <= m - c; ++j) {
+						if (canPutSticker(i, j)) {
+							canPut = true;
 							break;
 						}
 					}
-					if (isAttached) break;
 				}
-				if (isAttached) break;
 			}
 		}
 
 		int ans = 0;
-		for (int i = 0; i < r; ++i) {
-			for (int j = 0; j < c; ++j) {
+		for (int i = 0; i < n; ++i) {
+			for (int j = 0; j < m; ++j) {
 				if (board[i][j] == 1)
 					++ans;
 			}
@@ -59,48 +55,40 @@ public class Main {
 		System.out.println(ans);
 	}
 
-	public static void rotateSticker(int idx, int dir) {
-		
-		if (dir == 0)
+	static void rotateSticker(int dir) {
+        
+		if (dir == 0) {
 			return;
-
+		}
 		int[][] tmp = new int[14][14];
-
-		for (int i = 0; i < stickerInfo[idx][0]; ++i) {
-			for (int j = 0; j < stickerInfo[idx][1]; ++j) {
-				tmp[j][stickerInfo[idx][0] - i - 1] = sticker[idx][i][j];
+		for (int i = 0; i < r; ++i) {
+			for (int j = 0; j < c; ++j) {
+				tmp[j][r - i - 1] = sticker[i][j];
 			}
 		}
-
-		int temp = stickerInfo[idx][0];
-		stickerInfo[idx][0] = stickerInfo[idx][1];
-		stickerInfo[idx][1] = temp;
-
-		for (int i = 0; i < stickerInfo[idx][0]; ++i) {
-			for (int j = 0; j < stickerInfo[idx][1]; ++j) {
-				sticker[idx][i][j] = tmp[i][j];
+		int temp = r;
+		r = c;
+		c = temp;
+		for (int i = 0; i < r; ++i) {
+			for (int j = 0; j < c; ++j) {
+				sticker[i][j] = tmp[i][j];
 			}
 		}
 	}
 
-	public static boolean canPutSticker(int idx, int startY, int startX, int r, int c) {
-		int stickerY = stickerInfo[idx][0];
-		int stickerX = stickerInfo[idx][1];
+	static boolean canPutSticker(int y, int x) {
 
-		if (startY + stickerY > r || startX + stickerX > c) {
-			return false;
-		}
-		for (int i = startY; i < startY + stickerY; ++i) {
-			for (int j = startX; j < startX + stickerX; ++j) {
-				if (sticker[idx][i - startY][j - startX] == 1 && board[i][j] != 0) {
+		for (int i = y; i < y + r; ++i) {
+			for (int j = x; j < x + c; ++j) {
+				if (board[i][j] == 1 && sticker[i - y][j - x] == 1) {
 					return false;
 				}
 			}
 		}
-		for (int i = startY; i < startY + stickerY; ++i) {
-			for (int j = startX; j < startX + stickerX; ++j) {
-				if (sticker[idx][i - startY][j - startX] == 1) {
-					board[i][j] = sticker[idx][i - startY][j - startX];
+		for (int i = y; i < y + r; ++i) {
+			for (int j = x; j < x + c; ++j) {
+				if (board[i][j] == 0) {
+					board[i][j] = sticker[i - y][j - x];
 				}
 			}
 		}
