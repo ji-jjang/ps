@@ -1,90 +1,93 @@
-import java.io.*;
 import java.util.*;
-
+import java.io.*;
 
 public class Main {
 
-	static int[][] wheel = new int[4][8];
-
+	static char[][] wheels = new char[4][8];
 	public static void main(String[] args) throws IOException {
 
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+
 		for (int i = 0; i < 4; ++i) {
-			String line = br.readLine();
+			char[] line = br.readLine().toCharArray();
 			for (int j = 0; j < 8; ++j) {
-				wheel[i][j] = line.charAt(j) - '0';
+				wheels[i][j] = line[j];
 			}
 		}
-
-		int k = Integer.parseInt(br.readLine());
-
-		while (k-- > 0) {
-			StringTokenizer st = new StringTokenizer(br.readLine());
-			int idx = Integer.parseInt(st.nextToken()) - 1;
-			int dir = Integer.parseInt(st.nextToken());
-			boolean[] isRotate = new boolean[4];
-			int[] wheelDir = new int[4];
-			checkRotate(idx, dir, isRotate, wheelDir);
-			rotate(idx, dir, isRotate, wheelDir);
+		int t = Integer.parseInt(br.readLine());
+		while (t-- > 0) {
+			String[] tokens = br.readLine().split(" ");
+			int idx = Integer.parseInt(tokens[0]) - 1;
+			int dir = Integer.parseInt(tokens[1]);
+			int[] rotateWheels = new int[4];
+			checkRotateWheel(rotateWheels, idx, dir);
+			rotate(rotateWheels);
 		}
 		int ans = 0;
 		for (int i = 0; i < 4; ++i) {
-			if (wheel[i][0] == 1) {
+			if (wheels[i][0] == '1') {
 				ans += (1 << i);
 			}
 		}
 		System.out.println(ans);
 	}
 
-	public static void rotate(int idx, int dir, boolean[] isRotate, int[] wheelDir) {
+	static void checkRotateWheel(int[] rotateWheels, int idx, int dir) {
 
-		int[] tmp = new int[8];
+		rotateWheels[idx] = dir;
+
+		int curDir = dir;
+		for (int i = idx; i < 3; ++i) {
+			if (wheels[i][2] != wheels[i + 1][6]) {
+				curDir *= -1;
+				rotateWheels[i + 1] = curDir;
+			}
+			else
+				break;
+		}
+		curDir = dir;
+		for (int i = idx; i >= 1; --i) {
+			if (wheels[i][6] != wheels[i - 1][2]) {
+				curDir *= -1;
+				rotateWheels[i - 1] = curDir;
+			}
+			else
+				break;
+		}
+	}
+
+	static void rotate(int[] rotateWheels) {
+
 		for (int i = 0; i < 4; ++i) {
-			if (isRotate[i]) {
-				if (wheelDir[i] == 1) {
-					for (int j = 0; j < 8; ++j) {
-						tmp[(j + 1) % 8] = wheel[i][j];
-					}
-				}
-				else {
-					for (int j = 0; j < 8; ++j) {
-						int index = j - 1;
-						if (index < 0)
-							index = 7;
-						tmp[index] = wheel[i][j];
-					}
-				}
-				for (int j = 0; j < 8; ++j) {
-					wheel[i][j] = tmp[j];
-				}
+			if (rotateWheels[i] == 1) {
+				rotateClockwise(i);
+			} else if (rotateWheels[i] == -1) {
+				rotateCounterClockwise(i);
 			}
 		}
 	}
 
-	public static void checkRotate(int idx, int dir, boolean[] isRotate, int[] wheelDir) {
+	static void rotateClockwise(int idx) {
 
-		isRotate[idx] = true;
-		wheelDir[idx] = dir;
-		int newDir = dir;
-		for (int i = idx; i < 3; ++i) {
-			if (wheel[i][2] != wheel[i + 1][6]) {
-				newDir *= -1;
-				isRotate[i + 1] = true;
-				wheelDir[i + 1] = newDir;
-			}
-			else
-				break;
+		char[] tmp = new char[8];
+		for (int i = 0; i < 8; ++i) {
+			tmp[i] = wheels[idx][i];
 		}
+		for (int i = 1; i < 8; ++i) {
+			wheels[idx][i] = tmp[i - 1];
+		}
+		wheels[idx][0] = tmp[7];
+	}
 
-		newDir = dir;
-		for (int i = idx; i >= 1; --i) {
-			if (wheel[i][6] != wheel[i - 1][2]) {
-				newDir *= -1;
-				isRotate[i - 1] = true;
-				wheelDir[i - 1] = newDir;
-			}
-			else
-				break;
+	static void rotateCounterClockwise(int idx) {
+
+		char[] tmp = new char[8];
+		for (int i = 0; i < 8; ++i) {
+			tmp[i] = wheels[idx][i];
 		}
+		for (int i = 1; i < 8; ++i) {
+			wheels[idx][i - 1] = tmp[i];
+		}
+		wheels[idx][7] = tmp[0];
 	}
 }
