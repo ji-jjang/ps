@@ -4,7 +4,7 @@
 
 ### 성능 요약
 
-메모리: 14472 KB, 시간: 120 ms
+메모리: 15236 KB, 시간: 116 ms
 
 ### 분류
 
@@ -12,7 +12,7 @@
 
 ### 제출 일자
 
-2024년 10월 14일 02:24:22
+2024년 12월 23일 12:22:45
 
 ### 문제 설명
 
@@ -20,7 +20,7 @@
 
 <p>For example, let w be 2 and L be 10 and the sequence of the weights of the trucks be [7, 4, 5, 6] and the trucks are crossing from right to left. Then, the earliest time for all the trucks to cross the bridge is 8, as illustrated in Figure 1.</p>
 
-<p style="text-align: center;"><img alt="" src="https://onlinejudgeimages.s3-ap-northeast-1.amazonaws.com/problem/13335/1.png" style="height:214px; text-align:center; width:664px"></p>
+<p style="text-align: center;"><img alt="" src="" style="height:214px; text-align:center; width:664px"></p>
 
 <p style="text-align: center;">Figure 1. Trucks crossing the bridge.</p>
 
