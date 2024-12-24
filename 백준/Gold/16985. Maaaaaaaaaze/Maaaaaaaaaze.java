@@ -1,131 +1,121 @@
-import java.io.*;
 import java.util.*;
+import java.io.*;
 
 public class Main {
 
+	static int[][][] origin = new int[5][5][5];
 	static int[][][] board = new int[5][5][5];
-	static int[][][][] rotatedBoard = new int[5][4][5][5];
 	static int ans = Integer.MAX_VALUE;
-
+	static int[] dz = {-1, 1, 0, 0, 0, 0};
+	static int[] dy = {0, 0, -1, 1, 0, 0};
+	static int[] dx = {0, 0, 0, 0, -1, 1};
 	public static void main(String[] args) throws IOException {
 
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
 		for (int i = 0; i < 5; ++i) {
 			for (int j = 0; j < 5; ++j) {
-				StringTokenizer st = new StringTokenizer(br.readLine());
+				String[] tokens = br.readLine().split(" ");
 				for (int k = 0; k < 5; ++k) {
-					board[i][j][k] = Integer.parseInt(st.nextToken());
+					origin[i][j][k] = Integer.parseInt(tokens[k]);
 				}
 			}
 		}
-
-		rotatedBoard = new int[5][4][5][5];
-		for (int i = 0; i < 5; ++i) {
-			for (int rot = 0; rot < 4; ++rot) {
-				rotatedBoard[i][rot] = rotateBoard(board[i], rot);
-			}
+		dfs(0, new ArrayList<>(), new boolean[5]);
+		if (ans == Integer.MAX_VALUE) {
+			System.out.println(-1);
+			return;
 		}
-		dfs(0, new boolean[5], new int[5]);
-		if (ans == Integer.MAX_VALUE)
-			ans = -1;
 		System.out.println(ans);
 	}
 
-	public static int[][] rotateBoard(int[][] board, int rot) {
-    int[][] tmp = new int[5][5];
-    int[][] result = new int[5][5];
-
-		for (int i = 0; i < 5; ++i) {
-			for (int j = 0; j < 5; ++j) {
-				result[i][j] = board[i][j];
-			}
-		}
-
-    for (int r = 0; r < rot; ++r) {
-        for (int i = 0; i < 5; ++i) {
-            for (int j = 0; j < 5; ++j) {
-                tmp[j][5 - i - 1] = result[i][j];
-            }
-        }
-        int[][] temp = result;
-        result = tmp;
-        tmp = temp;
-    }
-    return result;
-}
-
-
-	public static void dfs(int depth, boolean[] isVisited, int[] boardSeq) {
-
+	static void dfs(int depth, List<Integer> nums, boolean[] isVisited) {
 		if (depth == 5) {
-			dfs2(0, boardSeq, new int[5]);
+			dfs2(0, new ArrayList<>(), nums);
 			return;
 		}
 		for (int i = 0; i < 5; ++i) {
 			if (isVisited[i]) continue;
 			isVisited[i] = true;
-			boardSeq[depth] = i;
-			dfs(depth + 1, isVisited, boardSeq);
+			nums.add(i);
+			dfs(depth + 1, nums, isVisited);
 			isVisited[i] = false;
+			nums.remove(nums.size() - 1);
 		}
 	}
 
-	public static void dfs2(int depth, int[] boardSeq, int[] rot) {
+	static void dfs2(int depth, List<Integer> dirs, List<Integer> nums) {
 
 		if (depth == 5) {
-			bfs(boardSeq, rot);
+			
+			for (int i = 0; i < 5; ++i) {
+				int idx = nums.get(i);
+				for (int j = 0; j < 5; ++j) {
+					for (int k = 0; k < 5; ++k) {
+						board[i][j][k] = origin[idx][j][k];
+					}
+				}
+			}
+			for (int i = 0; i < 5; ++i) {
+				rotate(i, dirs.get(i));
+			}
+			ans = Math.min(ans, bfs());
 			return;
 		}
 		for (int i = 0; i < 4; ++i) {
-			rot[depth] = i;
-			dfs2(depth + 1, boardSeq, rot);
+			dirs.add(i);
+			dfs2(depth + 1, dirs, nums);
+			dirs.remove(dirs.size() - 1);
 		}
 	}
 
-	public static void bfs(int[] boardSeq, int[] rot) {
+	static void rotate(int idx, int dir) {
 
-		int[][][] maze = new int[5][5][5];
-		for (int i = 0; i < 5; ++i) {
-			maze[i] = rotatedBoard[boardSeq[i]][rot[i]];
-		}
+		while (dir-- > 0) {
+			int[][] tmp = new int[5][5];
+			for (int i = 0; i < 5; ++i) {
+				for (int j = 0; j < 5; ++j) {
+					tmp[i][j] = board[idx][i][j];
+				}
+			}
 
-		if (maze[0][0][0] == 0 || maze[4][4][4] == 0) {
-			return;
+			for (int i = 0; i < 5; ++i) {
+				for (int j = 0; j < 5; ++j) {
+					board[idx][j][5 - i - 1] = tmp[i][j];
+				}
+			}
 		}
-		boolean[][][] isVisited = new boolean[5][5][5];
+	}
+	
+	static int bfs() {
+
+		if (board[0][0][0] == 0 || board[4][4][4] == 0) {
+			return Integer.MAX_VALUE;
+		}
 		Queue<int[]> q = new LinkedList<>();
-		q.add(new int[]{0, 0, 0, 0});
-		isVisited[0][0][0] = true;
-		int steps = 0;
-
-		int[] dz = {1, -1, 0, 0, 0, 0};
-		int[] dy = {0, 0, 1, -1, 0, 0};
-		int[] dx = {0, 0, 0, 0, 1, -1};
-
+		boolean[][][] isVisited = new boolean[5][5][5];
+		q.add(new int[]{0, 0, 0, 0}); // z, y, x, cnt
 		while (!q.isEmpty()) {
-			int[] cur = q.poll();
+			var cur = q.poll();
 			int z = cur[0];
 			int y = cur[1];
 			int x = cur[2];
 			int cnt = cur[3];
-
+			if (cnt == ans) 
+				return cnt;
 			if (z == 4 && y == 4 && x == 4) {
-				ans = Math.min(ans, cnt);
-				return;
+				return cnt;
 			}
-
 			for (int dir = 0; dir < 6; ++dir) {
 				int nz = z + dz[dir];
 				int ny = y + dy[dir];
 				int nx = x + dx[dir];
-				if (nz < 0 || nz >= 5 || ny < 0 || ny >= 5 || nx < 0 || nx >= 5)
-						continue;
-				if (isVisited[nz][ny][nx] || maze[nz][ny][nx] == 0)
-						continue;
+				if (nz < 0 || nz >= 5 || ny < 0 || ny >= 5 || nx < 0 || nx >= 5) continue;
+				if (isVisited[nz][ny][nx] || board[nz][ny][nx] != 1) continue;
 				isVisited[nz][ny][nx] = true;
 				q.add(new int[]{nz, ny, nx, cnt + 1});
 			}
 		}
+		return Integer.MAX_VALUE;
 	}
 }
