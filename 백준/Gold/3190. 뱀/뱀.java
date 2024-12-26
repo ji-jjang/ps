@@ -1,78 +1,66 @@
-import java.io.*;
 import java.util.*;
+import java.io.*;
 
 public class Main {
 
-	static int[] dy = {-1, 0, 1, 0};
-	static int[] dx = {0, 1, 0, -1};
-	static int n, k;
-	static int[][] board;
-	static Map<Integer, String> m = new HashMap<>();
-
-	public static void main(String[] args) throws IOException{
+	static int[][] map; // 0 empty, 1 apple, 2 snake(collision)
+	static int[] dy = {0, 1, 0, -1};
+	static int[] dx = {1, 0, -1, 0};
+	public static void main(String[] args) throws IOException {
 
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
-		n = Integer.parseInt(br.readLine());
-		k = Integer.parseInt(br.readLine());
+		int n = Integer.parseInt(br.readLine());
+		map = new int[n][n];
 
-		board = new int[n][n];
+		int k = Integer.parseInt(br.readLine());
 		for (int i = 0; i < k; ++i) {
-			StringTokenizer st = new StringTokenizer(br.readLine());
-			int y = Integer.parseInt(st.nextToken());
-			int x = Integer.parseInt(st.nextToken());
-			board[y - 1][x - 1] = 2;
+			String[] tokens = br.readLine().split(" ");
+			int y = Integer.parseInt(tokens[0]) - 1;
+			int x = Integer.parseInt(tokens[1]) - 1;
+			map[y][x] = 1;
 		}
 		int l = Integer.parseInt(br.readLine());
+		Map<Integer, Character> dirs = new HashMap<>();
 		for (int i = 0; i < l; ++i) {
-			StringTokenizer st = new StringTokenizer(br.readLine());
-			m.put(Integer.parseInt(st.nextToken()), st.nextToken());
+			String[] tokens = br.readLine().split(" ");
+			dirs.put(Integer.parseInt(tokens[0]), tokens[1].charAt(0));
 		}
 
-		System.out.println(start());
-	}
-
-	public static int start() {
-
-		int time = 0;
-		int hy = 0;
-		int hx = 0;
-		int dir = 1;
 		Deque<int[]> snake = new LinkedList<>();
-		snake.offerFirst(new int[]{hy, hx});
-		board[hy][hx] = 1;
-
+		int dir = 0;
+		map[0][0] = 2;
+		snake.add(new int[]{0, 0});
+		int ans = 1;
 		while (true) {
-			++time;
-			int ny = hy + dy[dir];
-			int nx = hx + dx[dir];
+			var pos = snake.peekFirst();
+			int y = pos[0];
+			int x = pos[1];
+			int ny = y + dy[dir];
+			int nx = x + dx[dir];
 
-			if (ny < 0 || ny >= n || nx < 0 || nx >= n || board[ny][nx] == 1) 
-				break;
-
-			if (board[ny][nx] == 2) {
-				board[ny][nx] = 1;
-				snake.offerFirst(new int[]{ny, nx});
-			} else {
-				board[ny][nx] = 1;
-				snake.offerFirst(new int[]{ny, nx});
-				var tail = snake.pollLast();
-				board[tail[0]][tail[1]] = 0;
-			}
-
-			hy = ny;
-			hx = nx;
-
-			if (m.containsKey(time)) {
-				String c = m.get(time);
-				if (c.equals("D")) {
+			if (dirs.containsKey(ans)) {
+				char c = dirs.get(ans);
+				if (c == 'D') {
 					dir = (dir + 1) % 4;
-				} else if (c.equals("L")) {
-					dir = (dir + 3) % 4;
+				}
+				else if (c == 'L') {
+					dir -= 1;
+					if (dir < 0) dir = 3;
 				}
 			}
+			if (ny < 0 || ny >= n || nx < 0 || nx >= n)
+				break;
+			if (map[ny][nx] == 2)
+				break;
+			snake.addFirst(new int[]{ny, nx});
+			if (map[ny][nx] == 0) { 
+				var cur = snake.pollLast();
+				map[cur[0]][cur[1]] = 0;
+			}
+			map[ny][nx] = 2;
+			++ans;
 		}
-
-		return time;
+		System.out.println(ans);
 	}
 }
