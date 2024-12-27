@@ -1,66 +1,57 @@
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.util.StringTokenizer;
+import java.util.*;
+import java.io.*;
 
 public class Main {
-    static int n, m;
-    static int[][] paper = new int[504][504];
-    static int ans = 0;
-    static int[][][] shape = {
-            {{1, 1, 1, 1}},
-            {{1}, {1}, {1}, {1}},
-            {{1, 1}, {1, 1}},
-            {{1, 0}, {1, 0}, {1, 1}},
-            {{0, 1}, {0, 1}, {1, 1}},
-            {{1, 1, 1}, {1, 0, 0}},
-            {{1, 1, 1}, {0, 0, 1}},
-            {{1, 1}, {0, 1}, {0, 1}},
-            {{1, 1}, {1, 0}, {1, 0}},
-            {{0, 0, 1}, {1, 1, 1}},
-            {{1, 0, 0}, {1, 1, 1}},
-            {{1, 0}, {1, 1}, {0, 1}},
-            {{0, 1}, {1, 1}, {1, 0}},
-            {{0, 1, 1}, {1, 1, 0}},
-            {{1, 1, 0}, {0, 1, 1}},
-            {{1, 1, 1}, {0, 1, 0}},
-            {{0, 1}, {1, 1}, {0, 1}},
-            {{1, 0}, {1, 1}, {1, 0}},
-            {{0, 1, 0}, {1, 1, 1}}
-    };
-    public static void main(String[] args) throws IOException {
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        StringTokenizer st = new StringTokenizer(br.readLine());
-        n = Integer.parseInt(st.nextToken());
-        m = Integer.parseInt(st.nextToken());
-        for (int i = 0; i < n; i++) {
-            st = new StringTokenizer(br.readLine());
-            for (int j = 0; j < m; j++) {
-                paper[i][j] = Integer.parseInt(st.nextToken());
-            }
-        }
-        for (int i = 0; i < n; i++) {
-            for (int j = 0; j < m; j++) {
-                for (int k = 0; k < shape.length; k++) {
-                    checkScore(k, i, j);
-                }
-            }
-        }
-        System.out.println(ans);
-    }
 
-    static void checkScore(int index, int y, int x) {
-        int r = shape[index].length;
-        int c = shape[index][0].length;
-        if (y + r > n || x + c > m)
-            return;
-        int score = 0;
-        for (int i = y; i < y + r; ++i) {
-            for (int j = x; j < x + c; ++j) {
-                if (shape[index][i - y][j - x] == 1)
-                    score += paper[i][j];
-            }
-        }
-        ans = Math.max(ans, score);
-    }
+	static int[][] p;
+	static int n, m;
+	static boolean[][] isVisited;
+	static int ans = 0;
+	static int[] dy = {-1, 0, 1, 0};
+	static int[] dx = {0, 1, 0, -1};
+	public static void main(String[] args) throws IOException {
+
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		StringTokenizer st = new StringTokenizer(br.readLine());
+		n = Integer.parseInt(st.nextToken());
+		m = Integer.parseInt(st.nextToken());
+
+		p = new int[n][m];
+		isVisited = new boolean[n][m];
+
+		for (int i = 0; i < n; i++) {
+			st = new StringTokenizer(br.readLine());
+			for (int j = 0; j < m; j++) {
+				p[i][j] = Integer.parseInt(st.nextToken());
+			}
+		}
+		for (int i = 0; i < n; i++) {
+			for (int j = 0; j < m; j++) {
+				isVisited[i][j] = true;
+				dfs(0, i, j, p[i][j]);
+				isVisited[i][j] = false;
+			}
+		}
+		System.out.println(ans);
+	}
+
+	static void dfs(int depth, int y, int x, int sum) {
+		
+		if (depth == 3) {
+			ans = Math.max(ans, sum);
+			return;
+		}
+		for (int dir = 0; dir < 4; ++dir) {
+			int ny = y + dy[dir];
+			int nx = x + dx[dir];
+			if (ny < 0 || ny >= n || nx < 0 || nx >= m) continue;
+			if (isVisited[ny][nx]) continue;
+			isVisited[ny][nx] = true;
+			dfs(depth + 1, ny, nx, sum + p[ny][nx]);
+			if (depth == 1) {
+				dfs(depth + 1, y, x, sum + p[ny][nx]);
+			}
+			isVisited[ny][nx] = false;
+		}
+	}
 }
