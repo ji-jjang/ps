@@ -5,93 +5,86 @@ public class Main {
 
 	static int r, c;
 	static int[][] map;
+	static int[][] copy;
+	static List<int[]> emptyList = new ArrayList<>();
+	static List<int[]> virus = new ArrayList<>();
 	static int[] dy = {-1, 0, 1, 0};
 	static int[] dx = {0, 1, 0, -1};
-	static List<int[]> empty = new ArrayList<>();
-	static List<int[]> virus = new ArrayList<>();
-	static int ans = 0;
-
+	static int ans;
 	public static void main(String[] args) throws IOException {
 
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
-		StringTokenizer st = new StringTokenizer(br.readLine());
-
-		r = Integer.parseInt(st.nextToken());
-		c = Integer.parseInt(st.nextToken());
-
+		String[] tokens = br.readLine().split(" ");
+		r = Integer.parseInt(tokens[0]);
+		c = Integer.parseInt(tokens[1]);
 		map = new int[r][c];
+		copy = new int[r][c];
+
 		for (int i = 0; i < r; ++i) {
-			st = new StringTokenizer(br.readLine());
+			tokens = br.readLine().split(" ");
 			for (int j = 0; j < c; ++j) {
-				map[i][j] = Integer.parseInt(st.nextToken());
+				map[i][j] = Integer.parseInt(tokens[j]);
+
 				if (map[i][j] == 0) {
-					empty.add(new int[]{i, j});
-				}
-				if (map[i][j] == 2) {
+					emptyList.add(new int[]{i, j});
+				} else if (map[i][j] == 2) {
 					virus.add(new int[]{i, j});
 				}
 			}
 		}
 
-		dfs(0, 0, new int[empty.size()]);
+		dfs(0, 0, new ArrayList<>());
+
 		System.out.println(ans);
 	}
 
-	public static void dfs(int depth, int st, int[] seq) {
-
+	static void dfs(int depth, int st, List<int[]> selected) {
+		
 		if (depth == 3) {
-			bfs(seq);
+			for (int i = 0; i < r; ++i) {
+				for (int j = 0; j < c; ++j) {
+					copy[i][j] = map[i][j];
+				}
+			}
+			for (int i = 0; i < selected.size(); ++i) {
+				int y = selected.get(i)[0];
+				int x = selected.get(i)[1];
+				copy[y][x] = 1;
+			}
+
+			Queue<int[]> q = new LinkedList<>();
+			for (var e : virus) {
+				q.offer(e);
+			}
+			while (!q.isEmpty()) {
+				var cur = q.poll();
+				int y = cur[0];
+				int x = cur[1];
+				for (int dir = 0; dir < 4; ++dir) {
+					int ny = y + dy[dir];
+					int nx = x + dx[dir];
+					if (ny < 0 || ny >= r || nx < 0 || nx >= c) continue;
+					if (copy[ny][nx] != 0) continue;
+					copy[ny][nx] = 2;
+					q.offer(new int[]{ny, nx});
+				}
+			}
+			
+			int cnt = 0;
+			for (int i = 0; i < r; ++i) {
+				for (int j = 0; j < c; ++j) {
+					if (copy[i][j] == 0) ++cnt;
+				}
+			}
+			ans = Math.max(ans, cnt);
 			return; 
 		}
+		for (int i = st; i < emptyList.size(); ++i) {
 
-		for (int i = st; i < empty.size(); ++i) {
-			seq[depth] = i;
-			dfs(depth + 1, i + 1, seq);
+			selected.add(emptyList.get(i));
+			dfs(depth + 1, i + 1, selected);
+			selected.remove(selected.size() - 1);
 		}
-	}
-
-	public static void bfs(int[] seq) {
-
-		int[][] tmp = new int[r][c];
-		boolean[][] isVisited = new boolean[r][c];
-		for (int i = 0; i < r; ++i) {
-			for (int j = 0; j < c; ++j) {
-				tmp[i][j] = map[i][j];
-			}
-		}
-		for (int i = 0; i < 3; ++i) {
-			int idx = seq[i];
-			tmp[empty.get(idx)[0]][empty.get(idx)[1]] = 1;
-		}
-
-		Queue<int[]> q = new LinkedList<>();
-		for (int i = 0; i < virus.size(); ++i) {
-			q.add(new int[]{virus.get(i)[0], virus.get(i)[1]});
-			isVisited[virus.get(i)[0]][virus.get(i)[1]] = true;
-		}
-
-		while (!q.isEmpty()) {
-			var cur = q.poll();
-			int y = cur[0];
-			int x = cur[1];
-			for (int dir = 0; dir < 4; ++dir) {
-				int ny = y + dy[dir];
-				int nx = x + dx[dir];
-				if (ny < 0 || ny >= r || nx < 0 || nx >= c) continue;
-				if (isVisited[ny][nx] || tmp[ny][nx] != 0) continue;
-				isVisited[ny][nx] = true;
-				tmp[ny][nx] = 2;
-				q.add(new int[]{ny, nx});
-			}
-		}
-		int cnt = 0;
-		for (int i = 0; i < r; ++i) {
-			for (int j = 0; j < c; ++j) {
-				if (tmp[i][j] == 0)
-					++cnt;
-			}
-		}
-		ans = Math.max(ans, cnt);
 	}
 }
