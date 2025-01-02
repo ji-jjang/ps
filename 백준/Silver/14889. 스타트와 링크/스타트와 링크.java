@@ -1,62 +1,60 @@
 import java.io.*;
 import java.util.*;
+import java.util.stream.*;
 
 public class Main {
 
 	static int n;
-	static int[][] team;
+	static int[][] table;
 	static int ans = Integer.MAX_VALUE;
-
 	public static void main(String[] args) throws IOException {
-
+		
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-
 		n = Integer.parseInt(br.readLine());
-		team = new int[n][n];
+		table = new int[n][n];
 
 		for (int i = 0; i < n; ++i) {
-			StringTokenizer st = new StringTokenizer(br.readLine());
+			String[] tokens = br.readLine().split(" ");
 			for (int j = 0; j < n; ++j) {
-				team[i][j] = Integer.parseInt(st.nextToken());
+				table[i][j] = Integer.parseInt(tokens[j]);
 			}
 		}
 
-		dfs(0, 0, n, new int[n / 2], new boolean[n]);
+		dfs(0, 0, new ArrayList<>());
+
 		System.out.println(ans);
 	}
 
-	public static void dfs(int depth, int st, int n, int[] seq, boolean[] isVisited) {
-
+	static void dfs(int depth, int st, List<Integer> selected) {
+		
 		if (depth == n / 2) {
-			int[] seq2 = new int[n / 2];
-			int idx = 0;
-			for (int i = 0; i < n; ++i) {
-				if (!isVisited[i])
-					seq2[idx++] = i;
-			}
-			ans = Math.min(ans, Math.abs(calTeam(seq) - calTeam(seq2)));
+
+		 List<Integer> notSelected = IntStream.range(0, n)
+						.boxed()
+						.filter(num -> !selected.contains(num))
+						.collect(Collectors.toList());
+
+			ans = Math.min(ans, Math.abs(calc(selected) - calc(notSelected)));
+
 			return;
 		}
-
 		for (int i = st; i < n; ++i) {
-			if (isVisited[i]) continue;
-			isVisited[i] = true;
-			seq[depth] = i;
-			dfs(depth + 1, i + 1, n, seq, isVisited);
-			isVisited[i] = false;
+			selected.add(i);
+			dfs(depth + 1, i + 1, selected);
+			selected.remove(selected.size() - 1);
 		}
 	}
 
-	public static int calTeam(int[] members) {
+	static int calc(List<Integer> team) {
 
-		int sum = 0;
-		for (int i = 0; i < members.length; ++i) {
-			for (int j = 0; j < members.length; ++j) {
+		int score = 0;
+		for (int i = 0; i < team.size(); ++i) {
+			for (int j = 0; j < team.size(); ++j) {
 				if (i != j) {
-					sum += team[members[i]][members[j]];
+					score += table[team.get(i)][team.get(j)];
 				}
 			}
 		}
-		return sum;
+		return score;
 	}
 }
