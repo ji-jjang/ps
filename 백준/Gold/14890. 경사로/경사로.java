@@ -5,76 +5,75 @@ public class Main {
 
 	static int n, l;
 	static int[][] map;
-	static int ans = 0;
-
 	public static void main(String[] args) throws IOException {
 
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
-		StringTokenizer st = new StringTokenizer(br.readLine());
-		n = Integer.parseInt(st.nextToken());
-		l = Integer.parseInt(st.nextToken());
-
+		String[] tokens = br.readLine().split(" ");
+		n = Integer.parseInt(tokens[0]);
+		l = Integer.parseInt(tokens[1]);
 		map = new int[n][n];
 
 		for (int i = 0; i < n; ++i) {
-			st = new StringTokenizer(br.readLine());
+			tokens = br.readLine().split(" ");
 			for (int j = 0; j < n; ++j) {
-				map[i][j] = Integer.parseInt(st.nextToken());
+				map[i][j] = Integer.parseInt(tokens[j]);
 			}
 		}
 
+		int ans = 0;
 		for (int i = 0; i < n; ++i) {
-			if (canPassWay(i)) {
+			if (canCross(i))
 				++ans;
-			}
 		}
-
-		int[][] tmp = new int[n][n];
+		rotate();
 		for (int i = 0; i < n; ++i) {
-			for (int j = 0; j < n; ++j) {
-				tmp[j][n - i - 1] = map[i][j];
-			}
-		}
-		for (int i = 0; i < n; ++i) {
-			for (int j = 0; j < n; ++j) {
-				map[i][j] = tmp[i][j];
-			}
-		}
-		for (int i = 0; i < n; ++i) {
-			if (canPassWay(i)) {
+			if (canCross(i))
 				++ans;
-			}
 		}
 		System.out.println(ans);
 	}
 
-	static boolean canPassWay(int row) {
+	static boolean canCross(int row) {
 
-		boolean[] isUsed = new boolean[n];
+		boolean[] isChecked = new boolean[n];
+
 		for (int col = 0; col < n - 1; ++col) {
-			int cur = map[row][col];
-			int nxt = map[row][col + 1];
-			if (cur == nxt)
-				continue;
-			if (Math.abs(cur - nxt) != 1)
-				return false;
+			if (map[row][col] == map[row][col + 1]) continue;
 
-			if (cur + 1 == nxt) {
-				for (int i = col; i >= col - l + 1; --i) {
-					if (i < 0 || map[row][i] != cur || isUsed[i])
+			if (Math.abs(map[row][col] - map[row][col + 1]) > 1) return false;
+
+			if (map[row][col] > map[row][col + 1]) {
+				for (int i = 1; i <= l; ++i) {
+					if (col + i >= n || map[row][col + 1] != map[row][col + i] || isChecked[col + i]) {
 						return false;
-					isUsed[i] = true;
+					}
+					isChecked[col + i] = true; 
 				}
-			}
-			else if (cur - 1 == nxt) { 
-				for (int i = col + 1; i <= col + l; ++i) {
-					if (i >= n || map[row][i] != nxt || isUsed[i])
+			} else {
+				for (int i = 0; i < l; ++i) {
+					if (col - i < 0 || map[row][col] != map[row][col - i] || isChecked[col - i]) {
 						return false;
-					isUsed[i] = true;
+					}
+					isChecked[col - i] = true;
 				}
 			}
 		}
 		return true;
+	}
+
+
+	static void rotate() {
+		int[][] tmp = new int[n][n];
+		for (int i = 0; i < n; ++i) {
+			for (int j = 0; j < n; ++j) {
+				tmp[i][j] = map[i][j];
+			}
+		}
+		for (int i = 0; i < n; ++i) {
+			for (int j = 0; j < n; ++j) {
+				map[j][n - i - 1] = tmp[i][j];
+			}
+		}
 	}
 }
