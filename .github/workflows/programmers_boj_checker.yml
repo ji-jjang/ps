@@ -20,23 +20,16 @@ jobs:
       run: |
         sudo apt-get update
         sudo apt-get install -y wget unzip
-        wget -O /tmp/chrome-linux64.zip https://storage.googleapis.com/chrome-for-testing-public/130.0.6723.58/linux64/chrome-linux64.zip
+        wget -O /tmp/chrome-linux64.zip https://storage.googleapis.com/chrome-for-testing-public/134.0.6998.35/linux64/chrome-linux64.zip
         sudo unzip /tmp/chrome-linux64.zip -d /opt/google/chrome
         sudo rm -f /usr/bin/google-chrome
         sudo ln -s /opt/google/chrome/chrome /usr/bin/google-chrome
 
     - name: Install ChromeDriver
       run: |
-        wget -O /tmp/chromedriver.zip https://storage.googleapis.com/chrome-for-testing-public/130.0.6723.58/linux64/chromedriver-linux64.zip
+        wget -O /tmp/chromedriver.zip https://storage.googleapis.com/chrome-for-testing-public/134.0.6998.35/linux64/chromedriver-linux64.zip
         sudo unzip /tmp/chromedriver.zip -d /opt/chrome-linux64/
         sudo ln -s /opt/chrome-linux64/chromedriver /usr/local/bin/chromedriver
-
-    - name: Set up jdk17
-      uses: actions/setup-java@v4
-      with:
-        distribution: 'corretto'
-        java-version: '17'
-        cache: 'gradle'
 
     - name: Build with Gradle
       run: ./gradlew build
