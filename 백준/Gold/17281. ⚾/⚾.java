@@ -8,6 +8,7 @@ public class Main {
 	static int ans = 0;
 
 	public static void main(String[] args) throws IOException {
+
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
 		n = Integer.parseInt(br.readLine());
@@ -27,7 +28,9 @@ public class Main {
 	}
 
 	static void dfs(int depth, int[] players, boolean[] isVisited, int[] orders) {
+
 		if (depth == 8) {
+
 			int[] lineup = new int[9];
 			int idx = 0;
 			for (int i = 0; i < 9; i++) {
@@ -56,60 +59,40 @@ public class Main {
 
 		int score = 0;
 		int idx = 0;
+		for (int[] inning : innings) {
 
-		for (var inning : innings) {
 			int outs = 0;
 			boolean[] bases = new boolean[3];
-
 			while (outs < 3) {
-				int ret = inning[orders[idx]];
-				switch (ret) {
-					case 0:
-						++outs;
-						break;
-					case 1:
-						if (bases[2]) {
+
+				int hit = inning[orders[idx]];
+
+				if (hit == 0) {
+					outs++;
+				} else if (hit == 4) {
+					for (int i = 0; i < 3; i++) {
+						if (bases[i]) {
 							++score;
+							bases[i] = false;
 						}
-						for (int i = 2; i > 0; --i) {
-							bases[i] = bases[i - 1];
-						}
-						bases[0] = true;
-						break;
-					case 2:
-						for (int i = 2; i >= 1; --i) {
-							if (bases[i]) {
+					}
+					++score; 
+				} else {
+					for (int i = 2; i >= 0; i--) {
+						if (bases[i]) {
+							if (i + hit >= 3) {
 								++score;
-								bases[i] = false;
+							} else {
+								bases[i + hit] = true;
 							}
+							bases[i] = false;
 						}
-						bases[2] = bases[0];
-						bases[0] = false;
-						bases[1] = true;
-						break;
-					case 3:
-						for (int i = 2; i >= 0; --i) {
-							if (bases[i]) {
-								++score;
-								bases[i] = false;
-							}
-						}
-						bases[2] = true;
-						break;
-					case 4:
-						for (int i = 2; i >= 0; --i) {
-							if (bases[i]) {
-								++score;
-								bases[i] = false;
-							}
-						}
-						++score;
-						break;
+					}
+					if (hit < 4) bases[hit - 1] = true;
 				}
 				idx = (idx + 1) % 9;
 			}
 		}
-
 		return score;
 	}
 }
